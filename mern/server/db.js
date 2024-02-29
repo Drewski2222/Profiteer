@@ -1,4 +1,4 @@
-//THIS FILE IS NOT NEEDED BUT SOME FUNCTIONALITY IS
+// THIS FILE NEEDS TO BE REFACTORED TO MONGO
 const fs = require("fs");
 const sqlite3 = require("sqlite3").verbose();
 const dbWrapper = require("sqlite");

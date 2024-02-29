@@ -1,8 +1,13 @@
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
 require("dotenv").config({ path: "./config.env" });
+
 const port = process.env.PORT || 5000;
+
 app.use(cors());
 app.use(express.json());
 app.use(require("./routes/record"));
@@ -15,18 +20,6 @@ app.listen(port, () => {
    });
   console.log(`Server is running on port: ${port}`);
 });
-
-//ADDED CODE:
-require("dotenv").config();
-const express = require("express");
-const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-
-const APP_PORT = process.env.APP_PORT || 8000;
-
-/**
- * Initialization!
- */
 
 // Set up the server
 

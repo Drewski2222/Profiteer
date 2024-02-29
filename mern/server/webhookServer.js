@@ -8,7 +8,7 @@ const { syncTransactions } = require("./routes/transactions");
  * We run this on a separate port so that it's easier to expose just this
  * server to the world using a tool like ngrok
  */
-const WEBHOOK_PORT = process.env.WEBHOOK_PORT || 8001;
+const WEBHOOK_PORT = process.env.WEBHOOK_PORT || 5001;
 
 const webhookApp = express();
 webhookApp.use(bodyParser.urlencoded({ extended: false }));
