@@ -1,8 +1,8 @@
 const { MongoClient } = require("mongodb");
-const uri = process.env.ATLAS_URI;
-const client = new MongoClient(uri);
+// const uri = process.env.ATLAS_URI;
+// const client = new MongoClient(uri);
  
-var _db;
+// var _db;
  
 // module.exports = {
 //   connectToServer: function (callback) {
@@ -45,35 +45,44 @@ var _db;
 //   },
 // };
 
-const conn = async function () {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
-    getJohnny();
-    // Send a ping to confirm a successful connection
-    await client.db("appdata").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-    
-  } catch (error) {
-    console.error('MongoDB Connection Error:', error.message);
-    // Exit process with failure
-    process.exit(1);
-  } finally {
-    // Ensures that the client will close when you finish/error
-    await client.close();
-  }
+// const run = async function () {
+//   try {
+//     await client.connect();
+//     // Get the database and collection on which to run the operation
+//     const appdata = client.db("appdata");
+//     const userInfo = appdata.collection("userInfo");
+//     // Execute query
+//     const user = getFirstName(userInfo, "Johnny");
+//     // Print the document returned by findOne()
+//     console.log(user);
+//   } finally {
+//       await client.close();
+//   }
+// }
+// run().catch(console.dir);
+
+function getClient() {
+      // Local setup
+      if (!process.env.ATLAS_URI) throw new Error("Invalid/missing database key")
+
+      const uri = process.env.ATLAS_URI
+      const options = {}
+
+      const client = new MongoClient(uri, options)
+      const clientPromise = client.connect()
+      console.log("Successfully connected to MongoDB.")
+
+  return clientPromise
 }
 
-async function getJohnny(){
-  const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
+async function getFirstName(collection, firstName){
   const query = {
-    first_name: "Johnny",
+    first_name: firstName,
   }
 
-  const user = await userInfo.findOne(query);
+  const user = await collection.findOne(query);
 
   console.log(user);
 }
 
-module.exports = conn;
+exports.getClient = getClient;
