@@ -14,8 +14,6 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-// const appdata = client.db("appdata");
-// const userInfo = appdata.collection("userInfo");
 
 
 const bodyParser = require("body-parser");

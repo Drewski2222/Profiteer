@@ -49,9 +49,11 @@ const conn = async function () {
   try {
     // Connect the client to the server	(optional starting in v4.7)
     await client.connect();
+    getJohnny();
     // Send a ping to confirm a successful connection
     await client.db("appdata").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    
   } catch (error) {
     console.error('MongoDB Connection Error:', error.message);
     // Exit process with failure
@@ -62,5 +64,16 @@ const conn = async function () {
   }
 }
 
+async function getJohnny(){
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const query = {
+    first_name: "Johnny",
+  }
+
+  const user = await userInfo.findOne(query);
+
+  console.log(user);
+}
+
 module.exports = conn;
-module.exports = client;
