@@ -2,6 +2,8 @@
 // const fs = require("fs");
 // const crypto = require("crypto");
 // const { SimpleTransaction } = require("./simpleTransactionObject");
+//const { appdata, userInfo } = require("./db/conn.js");
+const server = require("./server.js");
 
 // // You may want to have this point to different databases based on your environment
 // const databaseFile = "./database/appdata.db";
@@ -14,13 +16,26 @@
 //   return db;
 // };
 
-// const getItemIdsForUser = async function (userId) {
-//   const items = await db.all(
-//     `SELECT id FROM items WHERE user_id=? AND is_active = 1`,
-//     userId
-//   );
-//   return items;
-// };
+const getItemIdsForUser = async function (userId) {
+  let ids = [];
+
+  const query = {
+    _id: userId,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const user = await userInfo.findOne(query);
+
+  for (let i = 0; i < user.items.length; i++){
+    ids.push(user.items[i].item.item_id);
+  }
+
+  console.log(ids);
+};
+
+exports.getItemIdsForUser = getItemIdsForUser;
 
 // const getItemsAndAccessTokensForUser = async function (userId) {
 //   const items = await db.all(

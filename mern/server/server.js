@@ -7,11 +7,14 @@ app.use(cors());
 app.use(express.json());
 app.use(require("./routes/record"));
 // get driver connection
+const { ObjectId } = require("mongodb");
 const conn = require("./db/conn");
-let client;
+const db = require("./db.js");
 app.listen(port, () => {
   // perform a database connection when server starts
-  client = conn.getClient();
+  exports.client = conn.connectClient();
+  //conn.getFirstName();
+  db.getItemIdsForUser(new ObjectId('65e10fd3b7e92e98bd08a307'));
   console.log(`Server is running on port: ${port}`);
 });
 
@@ -19,6 +22,7 @@ app.listen(port, () => {
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+
 // // Set up the server
 
 // app.use(cookieParser());

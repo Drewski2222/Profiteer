@@ -1,4 +1,7 @@
 const { MongoClient } = require("mongodb");
+var client;
+var appdata;
+var userInfo;
 // const uri = process.env.ATLAS_URI;
 // const client = new MongoClient(uri);
  
@@ -61,28 +64,40 @@ const { MongoClient } = require("mongodb");
 // }
 // run().catch(console.dir);
 
-function getClient() {
+function connectClient() {
       // Local setup
-      if (!process.env.ATLAS_URI) throw new Error("Invalid/missing database key")
+      if (!process.env.ATLAS_URI) throw new Error("Invalid/missing database key");
 
-      const uri = process.env.ATLAS_URI
-      const options = {}
+      const uri = process.env.ATLAS_URI;
+      const options = {};
 
-      const client = new MongoClient(uri, options)
-      const clientPromise = client.connect()
-      console.log("Successfully connected to MongoDB.")
+      client = new MongoClient(uri, options);
+      client.connect();
+      appdata = client.db("appdata");
+      userInfo = appdata.collection("userInfo");
+      console.log("Successfully connected to MongoDB.");
 
-  return clientPromise
+  return client
 }
 
-async function getFirstName(collection, firstName){
+function getClient() {
+  return client;
+}
+
+async function getFirstName(){
   const query = {
-    first_name: firstName,
+    first_name: "Johnny",
   }
 
-  const user = await collection.findOne(query);
+  // const appdata = client.db("appdata");
+  // const userInfo = appdata.collection("userInfo");
+  const user = await userInfo.findOne(query);
 
   console.log(user);
 }
 
+exports.connectClient = connectClient;
+exports.getFirstName = getFirstName;
 exports.getClient = getClient;
+exports.appdata = appdata;
+exports.userInfo = userInfo;
