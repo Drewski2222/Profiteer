@@ -1,7 +1,7 @@
-// const db = require("./db");
+const db = require("./db");
 
-// const getLoggedInUserId = function (req) {
-//   return req.cookies["signedInUser"];
-// };
+const getLoggedInUserId = function (req) {
+  return req.cookies["signedInUser"];
+};
 
-// module.exports = { getLoggedInUserId };
+module.exports = { getLoggedInUserId };

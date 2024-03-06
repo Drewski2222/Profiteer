@@ -37,13 +37,13 @@ const getItemIdsForUser = async function (userId) {
 
 exports.getItemIdsForUser = getItemIdsForUser;
 
-// const getItemsAndAccessTokensForUser = async function (userId) {
-//   const items = await db.all(
-//     `SELECT id, access_token FROM items WHERE user_id=? AND is_active = 1 `,
-//     userId
-//   );
-//   return items;
-// };
+const getItemsAndAccessTokensForUser = async function (userId) {
+  const items = await db.all(
+    `SELECT id, access_token FROM items WHERE user_id=? AND is_active = 1 `,
+    userId
+  );
+  return items;
+};
 
 // const getAccountIdsForItem = async function (itemId) {
 //   const accounts = await db.all(
