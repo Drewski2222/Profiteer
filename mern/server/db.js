@@ -1,8 +1,7 @@
 // // THIS FILE NEEDS TO BE REFACTORED TO MONGO
 // const fs = require("fs");
 // const crypto = require("crypto");
-// const { SimpleTransaction } = require("./simpleTransactionObject");
-//const { appdata, userInfo } = require("./db/conn.js");
+const { SimpleTransaction } = require("./simpleTransactionObject");
 const server = require("./server.js");
 
 // // You may want to have this point to different databases based on your environment
