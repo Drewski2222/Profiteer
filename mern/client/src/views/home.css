@@ -18,7 +18,7 @@
   flex-direction: column;
   background-size: cover;
   justify-content: center;
-  background-image: url("/grainy-1500w.png");
+  background-image: url("https://play.teleporthq.io/static/svg/placeholders/no-image.svg");
   background-position: center;
 }
 .home-background {
@@ -48,8 +48,12 @@
   align-items: center;
   justify-content: space-between;
 }
+.home-navlink {
+  display: contents;
+}
 .home-text {
   color: #37447E;
+  text-decoration: none;
 }
 .home-desktop-menu {
   gap: var(--dl-space-space-threeunits);
@@ -63,7 +67,8 @@
   flex-direction: row;
 }
 .home-link {
-  color: #37447E;
+  color: rgb(55, 68, 126);
+  text-decoration: none;
 }
 .home-register {
   width: 125px;
@@ -241,7 +246,7 @@
   object-fit: cover;
 }
 .home-text09 {
-  color: #37447e;
+  color: rgb(55, 68, 126);
   width: 100%;
   height: 10%;
   font-size: 60px;
@@ -292,9 +297,11 @@
   padding-bottom: var(--dl-space-space-oneandhalfunits);
 }
 .home-text11 {
+  color: var(--dl-color-colour_logo-primary);
   font-size: 60px;
 }
 .home-text12 {
+  color: var(--dl-color-primary-100);
   font-size: 26px;
   line-height: 40px;
 }
@@ -320,12 +327,14 @@
   padding-bottom: var(--dl-space-space-oneandhalfunits);
 }
 .home-text13 {
+  color: var(--dl-color-colour_logo-primary);
   width: auto;
   height: auto;
   z-index: 100;
   font-size: 60px;
 }
 .home-text14 {
+  color: var(--dl-color-primary-100);
   width: auto;
   height: auto;
   font-size: 26px;
@@ -356,16 +365,11 @@
   padding-top: var(--dl-space-space-oneandhalfunits);
   padding-left: var(--dl-space-space-fiveunits);
   padding-right: var(--dl-space-space-fiveunits);
-  animation-name: fadeIn;
   flex-direction: column;
   padding-bottom: var(--dl-space-space-oneandhalfunits);
-  animation-delay: 0s;
-  animation-duration: 300ms;
-  animation-direction: normal;
-  animation-iteration-count: 1;
-  animation-timing-function: ease;
 }
 .home-header {
+  color: var(--dl-color-colour_logo-primary);
   font-size: 60px;
   line-height: 60px;
 }
@@ -376,6 +380,7 @@
   flex-direction: column;
 }
 .home-text15 {
+  color: var(--dl-color-primary-100);
   width: auto;
   font-size: 26px;
   line-height: 40px;
@@ -387,35 +392,8 @@
   padding: var(--dl-space-space-threeunits);
   justify-content: center;
 }
-.home-icon12 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-  margin-right: var(--dl-space-space-twounits);
-}
-.home-icon14 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-  margin-right: var(--dl-space-space-twounits);
-}
-.home-icon16 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-  margin-right: var(--dl-space-space-twounits);
-}
-.home-icon18 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-  margin-right: var(--dl-space-space-twounits);
-}
-.home-icon20 {
-  width: var(--dl-size-size-xsmall);
-  height: var(--dl-size-size-xsmall);
-}
-.home-container6 {
-  display: contents;
-}
-.home-container8 {
-  display: contents;
+.home-text16 {
+  color: var(--dl-color-colour_logo-primary);
 }
 @media(max-width: 991px) {
   .home-second {
