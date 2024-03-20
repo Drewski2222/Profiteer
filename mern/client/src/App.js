@@ -17,7 +17,10 @@ function App() {
         >
           Learn React
         </a>
+        <a class="underline" href="connect.html" style={{ color: 'white'}}>Connect to your Bank!</a>
       </header>
+      
+    
     </div>
   );
 }

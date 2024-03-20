@@ -21,8 +21,6 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-
-
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 
@@ -63,5 +61,71 @@ const errorHandler = function (err, req, res, next) {
 };
 app.use(errorHandler);
 
+/*
+app.get("/api/is_user_connected", async (req, res, next) => {
+  console.log(`Our access token: ${req.session.access_token}`);
+  return req.session.access_token
+    ? res.json({ status: true })
+    : res.json({ status: false });
+});
+
+app.get("/api/get_bank_name", async (req, res, next) => {
+  const access_token = req.session.access_token;
+  const itemResponse = await client.itemGet({ access_token });
+  const configs = {
+    institution_id: itemResponse.data.item.institution_id,
+    country_codes: ["US"],
+  };
+  const instResponse = await client.institutionsGetById(configs);
+  console.log(`Institution Info: ${JSON.stringify(instResponse.data)}`);
+  const bankName = instResponse.data.institution.name;
+  res.json({ name: bankName });
+});
+
+//Creates a Link token and returns it
+app.get("/api/create_link_token", async (req, res, next) => {
+  const tokenResponse = await client.linkTokenCreate({
+    user: { client_user_id: req.sessionID },
+    client_name: "Vanilla JavaScript Sample",
+    language: "en",
+    products: ["transactions"],
+    country_codes: ["US"],
+    redirect_uri: "http://localhost:8000/oauth-return.html",
+  });
+  console.log(`Token response: ${JSON.stringify(tokenResponse.data)}`);
+
+  res.json(tokenResponse.data);
+});
+
+// Exchanges the public token from Plaid Link for an access token
+app.post("/api/exchange_public_token", async (req, res, next) => {
+  const exchangeResponse = await client.itemPublicTokenExchange({
+    public_token: req.body.public_token,
+  });
+
+  // FOR DEMO PURPOSES ONLY
+  // You should really store access tokens in a database that's tied to your
+  // authenticated user id.
+  console.log(`Exchange response: ${JSON.stringify(exchangeResponse.data)}`);
+  req.session.access_token = exchangeResponse.data.access_token;
+  res.json(true);
+});
+
+// Fetches balance data using the Node client library for Plaid
+app.get("/api/transactions", async (req, res, next) => {
+  const access_token = req.session.access_token;
+  const startDate = moment().subtract(30, "days").format("YYYY-MM-DD");
+  const endDate = moment().format("YYYY-MM-DD");
+
+  const transactionResponse = await client.transactionsGet({
+    access_token: access_token,
+    start_date: startDate,
+    end_date: endDate,
+    options: { count: 10 },
+  });
+  res.json(transactionResponse.data);
+});
+
+*/
 // Initialize our webhook server, too.
 // const webhookServer = getWebhookServer();
