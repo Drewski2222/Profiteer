@@ -34,8 +34,6 @@ const getItemIdsForUser = async function (userId) {
   console.log(ids);
 };
 
-exports.getItemIdsForUser = getItemIdsForUser;
-
 const getItemsAndAccessTokensForUser = async function (userId) {
   const items = await db.all(
     `SELECT id, access_token FROM items WHERE user_id=? AND is_active = 1 `,
@@ -82,12 +80,39 @@ const getItemsAndAccessTokensForUser = async function (userId) {
 //   // - Delete the item itself from the database
 // };
 
-// const addUser = async function (userId, username) {
-//   const result = await db.run(
-//     `INSERT INTO users(id, username) VALUES("${userId}", "${username}")`
-//   );
-//   return result;
-// };
+const addUser = async function (userId, email, password, username) {
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+
+  const doc = {
+    user_id: userId,
+    email: email,
+    password: password,
+    username: username,
+  }
+
+  const result = await userInfo.insertOne(doc);
+  
+  return result;
+};
+
+const findUser = async function (email, password) {
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+
+  const query = {
+    email: email,
+    password: password,
+  }
+
+  const result = await userInfo.findOne(query);
+  
+  return result;
+};
 
 // const getUserList = async function () {
 //   const result = await db.all(`SELECT id, username FROM users`);
@@ -308,26 +333,27 @@ const getItemsAndAccessTokensForUser = async function (userId) {
 //   }
 // };
 
-// module.exports = {
-//   debugExposeDb,
-//   getItemIdsForUser,
-//   getItemsAndAccessTokensForUser,
-//   getAccountIdsForItem,
-//   confirmItemBelongsToUser,
-//   deactivateItem,
-//   addUser,
-//   getUserList,
-//   getUserRecord,
-//   getBankNamesForUser,
-//   addItem,
-//   addBankNameForItem,
-//   addAccount,
-//   getItemInfo,
-//   getItemInfoForUser,
-//   addNewTransaction,
-//   modifyExistingTransaction,
-//   deleteExistingTransaction,
-//   markTransactionAsRemoved,
-//   getTransactionsForUser,
-//   saveCursorForItem,
-// };
+module.exports = {
+  // debugExposeDb,
+  getItemIdsForUser,
+  getItemsAndAccessTokensForUser,
+  // getAccountIdsForItem,
+  // confirmItemBelongsToUser,
+  // deactivateItem,
+  addUser,
+  findUser,
+  //getUserList,
+  //getUserRecord,
+  // getBankNamesForUser,
+  // addItem,
+  // addBankNameForItem,
+  // addAccount,
+  // getItemInfo,
+  // getItemInfoForUser,
+  // addNewTransaction,
+  // modifyExistingTransaction,
+  // deleteExistingTransaction,
+  // markTransactionAsRemoved,
+  // getTransactionsForUser,
+  // saveCursorForItem,
+};

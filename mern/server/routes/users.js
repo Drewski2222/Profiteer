@@ -11,14 +11,38 @@ const router = express.Router();
  * For the purpose of this sample, we're simply setting / fetching a cookie that
  * contains the userID as our way of getting the ID of our signed-in user.
  */
-router.post("/create", async (req, res, next) => {
+router.post("/register", async (req, res, next) => {
   try {
+    const email = escape(req.body.email);
+    const password = escape(req.body.password);
     const username = escape(req.body.username);
     const userId = uuidv4();
-    const result = await db.addUser(userId, username);
-    console.log(`User creation result is ${JSON.stringify(result)}`);
-    if (result["lastID"] != null) {
+
+    const result = await db.addUser(userId, email, password, username);
+
+    console.log(`User registration result is ${JSON.stringify(result)}`);
+    if (result["acknowledged"] == true) {
       res.cookie("signedInUser", userId, {
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        httpOnly: true,
+      });
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.post("/sign-in", async (req, res, next) => {
+  try {
+    const email = escape(req.body.email);
+    const password = escape(req.body.password);
+
+    const result = await db.findUser(email, password);
+
+    console.log(`User sign-in result is ${JSON.stringify(result)}`);
+    if (result["email"] == email && result["password"] == password) {
+      res.cookie("signedInUser", result["user_id"], {
         maxAge: 1000 * 60 * 60 * 24 * 30,
         httpOnly: true,
       });
