@@ -18,8 +18,7 @@
   flex-direction: column;
   background-size: cover;
   justify-content: center;
-  background-image: url("https://play.teleporthq.io/static/svg/placeholders/no-image.svg");
-  background-position: center;
+  background-image: url("https://i.imgur.com/IYm1Y6Z.png");
 }
 .home-background {
   left: 0px;
@@ -189,9 +188,15 @@
   width: 100%;
   bottom: 0px;
   height: 80%;
+  border: 2px dashed rgba(120,120,120,0.4);
+  bottom: 0px;
+  height: 444px;
   margin: auto;
+  display: flex;
   position: absolute;
-  object-fit: cover;
+  align-items: center;
+  flex-direction: column;
+  justify-content: center;
 }
 .home-container2 {
   flex: 0 0 auto;
