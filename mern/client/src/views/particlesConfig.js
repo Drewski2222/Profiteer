@@ -14,6 +14,9 @@ export default function ParticlesComponent() {
             id="tsparticles"
             init={particlesInit}
             options={{
+                fullScreen: {
+                    zIndex: 100,
+                },
                 fpsLimit: 120,
                 interactivity: {
                     events: {

@@ -91,24 +91,12 @@ const About = (props) => {
                 className="about-nav1"
               >
                 <div className="about-container3">
-                  <h2 className="about-text07">OnConf</h2>
                   <div data-thq="thq-close-menu" className="about-menu-close">
                     <svg viewBox="0 0 1024 1024" className="about-icon02">
                       <path d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"></path>
                     </svg>
                   </div>
                 </div>
-                <nav
-                  data-thq="thq-mobile-menu-nav-links"
-                  data-role="Nav"
-                  className="about-nav2"
-                >
-                  <span className="navLink about-text08">About</span>
-                  <span className="navLink about-text09">Features</span>
-                  <span className="navLink about-text10">Pricing</span>
-                  <span className="navLink about-text11">Team</span>
-                  <span className="navLink about-text12">Blog</span>
-                </nav>
                 <div className="about-button-container">
                   <button className="about-login button">Login</button>
                   <button className="button about-register2">Register</button>

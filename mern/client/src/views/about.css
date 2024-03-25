@@ -51,7 +51,7 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 .about-navbar {
-  top: 5%;
+  top: 33px;
   left: 0px;
   right: 0px;
   width: 100%;

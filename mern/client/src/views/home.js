@@ -14,7 +14,7 @@ const Home = (props) => {
         <title>Profiteer</title>
         <meta property="og:title" content="Profiteer" />
       </Helmet>
-      <section className="home-hero">
+      <div className="home-hero">
       <ParticlesComponent />
         <header data-thq="thq-navbar" className="home-navbar">
           <Link to="/" className="home-navlink">
@@ -96,7 +96,7 @@ const Home = (props) => {
             className="home-image2"
           />
         </div>
-      </section>
+      </div>
       <div className="home-second">
           <div
             className="home-content"
