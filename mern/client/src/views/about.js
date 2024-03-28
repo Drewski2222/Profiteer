@@ -50,7 +50,7 @@ const About = (props) => {
               name="Nathaniel Babione"
               role="Backend Developer"
               quote="Hello, I'm Nathaniel Babione. I am a Junior Computer Engineering student at the University of Florida. I am a developer for Profiteer and mainly work on developing the backend. I would like to specialize in computer graphics or some kind of artificial intelligence as I have found these topics to be very interesting. I also like speed solving Rubik's Cubes, playing guitar, and doing stuff with friends. Thanks for choosing Profiteer and I hope you can achieve your financial freedom!"
-              pictureSrc="https://cdn.discordapp.com/attachments/1197952320911196274/1219319797376876624/PXL_20230307_141707622.jpg?ex=660adf0d&amp;is=65f86a0d&amp;hm=ec18832960f0c9fa19607a42edc8afe1541d8c37bc3f20b44dc9c7d4515aeaf7&amp;"
+              pictureSrc="/nathan_headshot.jpg"
               rootClassName="rootClassName1"
             ></TestimonialCard1>
           </div>
@@ -91,24 +91,12 @@ const About = (props) => {
                 className="about-nav1"
               >
                 <div className="about-container3">
-                  <h2 className="about-text07">OnConf</h2>
                   <div data-thq="thq-close-menu" className="about-menu-close">
                     <svg viewBox="0 0 1024 1024" className="about-icon02">
                       <path d="M810 274l-238 238 238 238-60 60-238-238-238 238-60-60 238-238-238-238 60-60 238 238 238-238z"></path>
                     </svg>
                   </div>
                 </div>
-                <nav
-                  data-thq="thq-mobile-menu-nav-links"
-                  data-role="Nav"
-                  className="about-nav2"
-                >
-                  <span className="navLink about-text08">About</span>
-                  <span className="navLink about-text09">Features</span>
-                  <span className="navLink about-text10">Pricing</span>
-                  <span className="navLink about-text11">Team</span>
-                  <span className="navLink about-text12">Blog</span>
-                </nav>
                 <div className="about-button-container">
                   <button className="about-login button">Login</button>
                   <button className="button about-register2">Register</button>
