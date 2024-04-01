@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 import { Helmet } from 'react-helmet'
 
@@ -11,10 +11,18 @@ const Register = (props) => {
   const [username, setUsername] = React.useState('');
   const [password, setPassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
+  const history = useHistory();
 
   // form submission
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // check if all input boxes have text
+    if (!email.trim() || !username.trim() || !password.trim() || !confirmPassword.trim()) {
+      window.alert('Error: All fields must contain text.');
+      return;
+    }
+  
 
     // check if passwords match
     if (password !== confirmPassword) {
@@ -25,8 +33,31 @@ const Register = (props) => {
     // passwords match
     console.log('Form submitted:', { email, username, password });
     // send data to backend
+    fetch('http://localhost:5000/register', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email, username, password }),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Success:', data);
+      history.push('/confirmation');
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      // error handling
+    })
   };
-  
+
+    // enter button submission
+    const handleKey = (e) => {
+      if (e.key === 'Enter') {
+        handleSubmit(e);
+      }
+    }  
+
   return (
     <div className="register-container">
       <Helmet>
@@ -49,6 +80,7 @@ const Register = (props) => {
                 className="register-email input"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={handleKey}
               />
               </div>
               <div className="register-rectangle51">
@@ -57,6 +89,7 @@ const Register = (props) => {
                 className="register-user-name input"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
+                onKeyDown={handleKey}
               />
               </div>
               <span className="register-text03">Username</span>
@@ -69,6 +102,7 @@ const Register = (props) => {
                 className="register-pass input"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKey}
               />
               </div>
               <span className="register-text06">
@@ -81,6 +115,7 @@ const Register = (props) => {
                 className="register-pass-conf input"
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
+                onKeyDown={handleKey}
               />
               </div>
               <button
