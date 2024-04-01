@@ -114,10 +114,14 @@ const findUser = async function (email, password) {
   return result;
 };
 
-// const getUserList = async function () {
-//   const result = await db.all(`SELECT id, username FROM users`);
-//   return result;
-// };
+const getUserList = async function () {
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+
+  const result = await userInfo.find();
+  return result;
+};
 
 // const getUserRecord = async function (userId) {
 //   const result = await db.get(`SELECT * FROM users WHERE id=?`, userId);
@@ -342,7 +346,7 @@ module.exports = {
   // deactivateItem,
   addUser,
   findUser,
-  //getUserList,
+  getUserList,
   //getUserRecord,
   // getBankNamesForUser,
   // addItem,
