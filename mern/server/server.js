@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const { v4: uuidv4 } = require("uuid");
 require("dotenv").config({ path: "./config.env" });
 const port = process.env.PORT || 5000;
 
@@ -12,14 +13,6 @@ app.use(require("./routes/record"));
 const { ObjectId } = require("mongodb");
 const conn = require("./db/conn");
 const db = require("./db.js");
-
-app.listen(port, () => {
-  // perform a database connection when server starts
-  exports.client = conn.connectClient();
-  //conn.getFirstName();
-  db.getItemIdsForUser(new ObjectId('65e10fd3b7e92e98bd08a307'));
-  console.log(`Server is running on port: ${port}`);
-});
 
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
@@ -60,6 +53,36 @@ const errorHandler = function (err, req, res, next) {
   }
 };
 app.use(errorHandler);
+
+app.post("/register", async (req, res, next) => {
+  try {
+    const email = req.body.email;
+    const password = req.body.password;
+    const username = req.body.username;
+    const userId = uuidv4();
+
+    const result = await db.addUser(userId, email, password, username);
+
+    console.log(`User registration result is ${JSON.stringify(result)}`);
+    if (result["acknowledged"] == true) {
+      res.cookie("signedInUser", userId, {
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        httpOnly: true,
+      });
+    }
+    res.json(result);
+  } catch (error) {
+    next(error);
+  }
+});
+
+app.listen(port, () => {
+  // perform a database connection when server starts
+  exports.client = conn.connectClient();
+  //conn.getFirstName();
+  db.getItemIdsForUser(new ObjectId('65e10fd3b7e92e98bd08a307'));
+  console.log(`Server is running on port: ${port}`);
+});
 
 /*
 app.get("/api/is_user_connected", async (req, res, next) => {

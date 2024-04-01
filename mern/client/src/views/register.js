@@ -1,4 +1,5 @@
 import React from 'react'
+import axios from 'axios'
 import { Link, useHistory } from 'react-router-dom'
 
 import { Helmet } from 'react-helmet'
@@ -33,22 +34,29 @@ const Register = (props) => {
     // passwords match
     console.log('Form submitted:', { email, username, password });
     // send data to backend
-    fetch('http://localhost:5000/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ email, username, password }),
-    })
-    .then(response => response.json())
-    .then(data => {
-      console.log('Success:', data);
-      history.push('/confirmation');
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-      // error handling
-    })
+    axios.post("http://localhost:5000/register", {
+        email: email,
+        username : username,
+        password : password,
+      }).then((response)=> {
+        console.log(response);
+      }).catch(error => console.log(error.response.data))
+    // fetch('http://localhost:5000/register', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json',
+    //   },
+    //   body: JSON.stringify({ email, username, password }),
+    // })
+    // .then(response => response.json())
+    // .then(data => {
+    //   console.log('Success:', data);
+    //   history.push('/confirmation');
+    // })
+    // .catch((error) => {
+    //   console.error('Error:', error);
+    //   // error handling
+    // })
   };
 
     // enter button submission
