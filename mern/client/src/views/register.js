@@ -34,29 +34,13 @@ const Register = (props) => {
     // passwords match
     console.log('Form submitted:', { email, username, password });
     // send data to backend
-    axios.post("http://localhost:5000/register", {
+    axios.post("http://localhost:5000/server/users/register", {
         email: email,
         username : username,
         password : password,
       }).then((response)=> {
         console.log(response);
       }).catch(error => console.log(error.response.data))
-    // fetch('http://localhost:5000/register', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ email, username, password }),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    //   history.push('/confirmation');
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    //   // error handling
-    // })
   };
 
     // enter button submission
