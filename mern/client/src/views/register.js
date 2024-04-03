@@ -40,7 +40,7 @@ const Register = (props) => {
         password : password,
       }).then((response)=> {
         console.log(response);
-        history.push('/confirmation');
+        history.push('/public/js/connect');
       }).catch(error => console.log(error.response.data))
   };
 
