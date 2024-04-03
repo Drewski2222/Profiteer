@@ -233,30 +233,24 @@ const getItemInfoForUser = async function (itemId, userId) {
  * @param {SimpleTransaction} transactionObj
  */
 const addNewTransaction = async function (transactionObj) {
-  const query = {
-    _id: transactionObj.userId,
-  }
-  const push = {
-    $push: {
-      transactions: {
-        account_id: transactionObj.accountId,
-        transaction_id: transactionObj.transactionId,
-        pending: transactionObj.pending,
-        pending_transaction_id: transactionObj.pendingTransactionId,
-        personal_finance_category: transactionObj.personalFinanceCategory,
-        date: transactionObj.date,
-        authorized_date: transactionObj.authorizedDate,
-        merchant_name: transactionObj.merchantName,
-        amount: transactionObj.amount,
-        iso_currency_code: transactionObj.isoCurrencyCode,
-      }
-    }
+  const transaction = {
+    user_id: transactionObj.userId,
+    account_id: transactionObj.accountId,
+    transaction_id: transactionObj.transactionId,
+    pending: transactionObj.pending,
+    pending_transaction_id: transactionObj.pendingTransactionId,
+    personal_finance_category: transactionObj.personalFinanceCategory,
+    date: transactionObj.date,
+    authorized_date: transactionObj.authorizedDate,
+    merchant_name: transactionObj.merchantName,
+    amount: transactionObj.amount,
+    iso_currency_code: transactionObj.isoCurrencyCode,
   }
   try {
     const client = server.client;
     const appdata = client.db("appdata");
-    const userInfo = appdata.collection("userInfo");
-    const result = await userInfo.updateOne(query, push);
+    const transactions = appdata.collection("transactions");
+    const result = await transactions.insertOne(transaction);
 
     if (transactionObj.pendingTransactionId != null) {
       // This might be a good time to copy over any user-created values from
@@ -278,29 +272,25 @@ const addNewTransaction = async function (transactionObj) {
  */
 const modifyExistingTransaction = async function (transactionObj) {
   const query = {
-    _id: transactionObj.userId,
-    'transactions.transaction_id': transactionObj.transactionId,
+    transaction_id: transactionObj.transactionId,
   }
-  const set = {
-    $set: {
-      'transactions.$': {
-        account_id: transactionObj.accountId,
-        pending: transactionObj.pending,
-        pending_transaction_id: transactionObj.pendingTransactionId,
-        personal_finance_category: transactionObj.personalFinanceCategory,
-        date: transactionObj.date,
-        authorized_date: transactionObj.authorizedDate,
-        merchant_name: transactionObj.merchantName,
-        amount: transactionObj.amount,
-        iso_currency_code: transactionObj.isoCurrencyCode,
-      }
-    }
+  const transaction = {
+    user_id: transactionObj.userId,
+    account_id: transactionObj.accountId,
+    pending: transactionObj.pending,
+    pending_transaction_id: transactionObj.pendingTransactionId,
+    personal_finance_category: transactionObj.personalFinanceCategory,
+    date: transactionObj.date,
+    authorized_date: transactionObj.authorizedDate,
+    merchant_name: transactionObj.merchantName,
+    amount: transactionObj.amount,
+    iso_currency_code: transactionObj.isoCurrencyCode,
   }
   try {
     const client = server.client;
     const appdata = client.db("appdata");
-    const userInfo = appdata.collection("userInfo");
-    const result = await userInfo.updateOne(query, set);
+    const transactions = appdata.collection("transactions");
+    const result = await transactions.updateOne(query, transaction);
 
     return result;
   } catch (error) {
@@ -337,17 +327,14 @@ const modifyExistingTransaction = async function (transactionObj) {
  * @param {string} transactionId
  */
 const deleteExistingTransaction = async function (transactionId) {
-  const query = { }
-  const pull = {
-    $pull: {
-      'transactions.transaction_id': transactionId,
-    }
+  const query = {
+    transaction_id: transactionId,
   }
   try {
     const client = server.client;
     const appdata = client.db("appdata");
-    const userInfo = appdata.collection("userInfo");
-    const result = await userInfo.updateOne(query, pull);
+    const transactions = appdata.collection("transactions");
+    const result = await transactions.deleteOne(query);
 
     return result;
   } catch (error) {
@@ -363,19 +350,15 @@ const deleteExistingTransaction = async function (transactionId) {
  * @param {string} userId
  * @param {number} maxNum
  */
-const getTransactionsForUser = async function (userId, maxNum) {
+const getTransactionsForUser = async function (userId) {
   const query = {
-    _id: userId,
-  }
-  const proj = {
-    _id: 0,
-    transactions: 1
+    user_id: userId,
   }
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const result = await userInfo.findOne(query, proj).transactions;
-  return result.slice(0, maxNum);
+  const transactions = appdata.collection("transactions");
+  const result = await transactions.findMany(query);
+  return result;
 };
 
 /**
