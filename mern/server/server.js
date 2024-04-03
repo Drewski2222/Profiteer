@@ -84,7 +84,7 @@ app.listen(port, () => {
   console.log(`Server is running on port: ${port}`);
 });
 
-/*
+
 app.get("/api/is_user_connected", async (req, res, next) => {
   console.log(`Our access token: ${req.session.access_token}`);
   return req.session.access_token
@@ -149,6 +149,6 @@ app.get("/api/transactions", async (req, res, next) => {
   res.json(transactionResponse.data);
 });
 
-*/
+
 // Initialize our webhook server, too.
 // const webhookServer = getWebhookServer();
