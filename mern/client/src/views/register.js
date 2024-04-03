@@ -40,23 +40,8 @@ const Register = (props) => {
         password : password,
       }).then((response)=> {
         console.log(response);
+        history.push('/confirmation');
       }).catch(error => console.log(error.response.data))
-    // fetch('http://localhost:5000/register', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify({ email, username, password }),
-    // })
-    // .then(response => response.json())
-    // .then(data => {
-    //   console.log('Success:', data);
-    //   history.push('/confirmation');
-    // })
-    // .catch((error) => {
-    //   console.error('Error:', error);
-    //   // error handling
-    // })
   };
 
     // enter button submission
