@@ -54,27 +54,27 @@ const errorHandler = function (err, req, res, next) {
 };
 app.use(errorHandler);
 
-app.post("/register", async (req, res, next) => {
-  try {
-    const email = req.body.email;
-    const password = req.body.password;
-    const username = req.body.username;
-    const userId = uuidv4();
+// app.post("/register", async (req, res, next) => {
+//   try {
+//     const email = req.body.email;
+//     const password = req.body.password;
+//     const username = req.body.username;
+//     const userId = uuidv4();
 
-    const result = await db.addUser(userId, email, password, username);
+//     const result = await db.addUser(userId, email, password, username);
 
-    console.log(`User registration result is ${JSON.stringify(result)}`);
-    if (result["acknowledged"] == true) {
-      res.cookie("signedInUser", userId, {
-        maxAge: 1000 * 60 * 60 * 24 * 30,
-        httpOnly: true,
-      });
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+//     console.log(`User registration result is ${JSON.stringify(result)}`);
+//     if (result["acknowledged"] == true) {
+//       res.cookie("signedInUser", userId, {
+//         maxAge: 1000 * 60 * 60 * 24 * 30,
+//         httpOnly: true,
+//       });
+//     }
+//     res.json(result);
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
 app.listen(port, () => {
   // perform a database connection when server starts

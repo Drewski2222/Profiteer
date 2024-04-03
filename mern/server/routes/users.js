@@ -13,9 +13,9 @@ const router = express.Router();
  */
 router.post("/register", async (req, res, next) => {
   try {
-    const email = escape(req.body.email);
-    const password = escape(req.body.password);
-    const username = escape(req.body.username);
+    const email = req.body.email;
+    const password = req.body.password;
+    const username = req.body.username;
     const userId = uuidv4();
 
     const result = await db.addUser(userId, email, password, username);

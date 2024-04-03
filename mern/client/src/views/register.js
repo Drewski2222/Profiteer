@@ -34,7 +34,7 @@ const Register = (props) => {
     // passwords match
     console.log('Form submitted:', { email, username, password });
     // send data to backend
-    axios.post("http://localhost:5000/register", {
+    axios.post("http://localhost:5000/server/users/register", {
         email: email,
         username : username,
         password : password,
