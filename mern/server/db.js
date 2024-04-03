@@ -35,11 +35,16 @@ const getItemIdsForUser = async function (userId) {
 };
 
 const getItemsAndAccessTokensForUser = async function (userId) {
-  const items = await db.all(
-    `SELECT id, access_token FROM items WHERE user_id=? AND is_active = 1 `,
-    userId
-  );
-  return items;
+  const query = {
+    _id: userId,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const user = await userInfo.findOne(query);
+
+  return user.items;
 };
 
 // const getAccountIdsForItem = async function (itemId) {
@@ -50,22 +55,27 @@ const getItemsAndAccessTokensForUser = async function (userId) {
 //   return accounts;
 // };
 
-// const confirmItemBelongsToUser = async function (possibleItemId, userId) {
-//   const result = await db.get(
-//     `SELECT id FROM items WHERE id = ? and user_id = ?`,
-//     possibleItemId,
-//     userId
-//   );
-//   console.log(result);
-//   if (result && result.id === possibleItemId) {
-//     return true;
-//   } else {
-//     console.warn(
-//       `User ${userId} claims to own item they don't: ${possibleItemId}`
-//     );
-//     return false;
-//   }
-// };
+const confirmItemBelongsToUser = async function (possibleItemId, userId) {
+  const query = {
+    _id: userId,
+    "items.item.item_id": possibleItemId,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const result = await userInfo.findOne(query);
+
+  console.log(result);
+  if (result === undefined) {
+    console.warn(
+      `User ${userId} claims to own item they don't: ${possibleItemId}`
+    );
+    return false;
+  } else {
+    return true;
+  }
+};
 
 // const deactivateItem = async function (itemId) {
 //   const updateResult = await db.run(
@@ -114,38 +124,57 @@ const findUser = async function (email, password) {
   return result;
 };
 
-const getUserList = async function () {
-  const client = server.client;
-  const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-
-  const result = await userInfo.find();
-  return result;
-};
+// const getUserList = async function () {
+//   const result = await db.all(`SELECT id, username FROM users`);
+//   return result;
+// };
 
 // const getUserRecord = async function (userId) {
 //   const result = await db.get(`SELECT * FROM users WHERE id=?`, userId);
 //   return result;
 // };
 
-// const getBankNamesForUser = async function (userId) {
-//   const result = await db.all(
-//     `SELECT id, bank_name
-//       FROM items WHERE user_id=? AND is_active = 1`,
-//     userId
-//   );
-//   return result;
-// };
+const getBankNamesForUser = async function (userId) {
+  let i_ids = [];
 
-// const addItem = async function (itemId, userId, accessToken) {
-//   const result = await db.run(
-//     `INSERT INTO items(id, user_id, access_token) VALUES(?, ?, ?)`,
-//     itemId,
-//     userId,
-//     accessToken
-//   );
-//   return result;
-// };
+  const query = {
+    _id: userId,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const user = await userInfo.findOne(query);
+
+  for (let i = 0; i < user.items.length; i++){
+    i_ids.push(user.items[i].item.institution_id);
+  }
+
+  // make API request to get name from id addBankNameForItem()
+
+  return i_ids;
+};
+
+const addItem = async function (itemId, userId, accessToken) {
+  const query = {
+    _id: userId,
+  }
+  const push = {
+    $push: {
+      items: {
+        item_id: itemId,
+        access_token: accessToken,
+      }
+    }
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const result = await userInfo.updateOne(query, push);
+
+  return result;
+};
 
 // const addBankNameForItem = async function (itemId, institutionName) {
 //   const result = await db.run(
@@ -165,93 +194,121 @@ const getUserList = async function () {
 //   );
 // };
 
-// const getItemInfo = async function (itemId) {
-//   const result = await db.get(
-//     `SELECT user_id, access_token, transaction_cursor FROM items WHERE id=?`,
-//     itemId
-//   );
-//   return result;
-// };
+const getItemInfo = async function (itemId) {
+  const query = {
+    "items.item.item_id": itemId,
+  }
+  const proj = {
+    "items.item": 1,
+  }
 
-// const getItemInfoForUser = async function (itemId, userId) {
-//   const result = await db.get(
-//     `SELECT user_id, access_token, transaction_cursor FROM items 
-//     WHERE id= ? AND user_id = ?`,
-//     itemId,
-//     userId
-//   );
-//   return result;
-// };
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const result = await userInfo.find(query, proj);
 
-// /**
-//  * Add a new transaction to our database
-//  *
-//  * @param {SimpleTransaction} transactionObj
-//  */
-// const addNewTransaction = async function (transactionObj) {
-//   try {
-//     const result = await db.run(
-//       `INSERT INTO transactions
-//     (id, user_id, account_id, category, date, authorized_date, name, amount, 
-//       currency_code)
-//     VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)
-//   `,
-//       transactionObj.id,
-//       transactionObj.userId,
-//       transactionObj.accountId,
-//       transactionObj.category,
-//       transactionObj.date,
-//       transactionObj.authorizedDate,
-//       transactionObj.name,
-//       transactionObj.amount,
-//       transactionObj.currencyCode
-//     );
+  return result;
+};
 
-//     if (transactionObj.pendingTransactionId != null) {
-//       // This might be a good time to copy over any user-created values from
-//       // that other transaction to this one.
-//     }
+const getItemInfoForUser = async function (itemId, userId) {
+  const query = {
+    _id: userId,
+    "items.item.item_id": itemId,
+  }
+  const proj = {
+    "items.item": 1,
+  }
 
-//     return result;
-//   } catch (error) {
-//     console.log(
-//       `Looks like I'm encountering an error. ${JSON.stringify(error)}`
-//     );
-//     if (error.code === "SQLITE_CONSTRAINT") {
-//       console.log(`Maybe I'm reusing a cursor?`);
-//     }
-//   }
-// };
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const result = await userInfo.findOne(query, proj);
 
-// /**
-//  * Modify an existing transaction in our database
-//  *
-//  * @param {SimpleTransaction} transactionObj
-//  */
-// const modifyExistingTransaction = async function (transactionObj) {
-//   try {
-//     const result = await db.run(
-//       `UPDATE transactions 
-//       SET account_id = ?, category = ?, date = ?, 
-//       authorized_date = ?, name = ?, amount = ?, currency_code = ? 
-//       WHERE id = ?
-//       `,
-//       transactionObj.accountId,
-//       transactionObj.category,
-//       transactionObj.date,
-//       transactionObj.authorizedDate,
-//       transactionObj.name,
-//       transactionObj.amount,
-//       transactionObj.currencyCode,
-//       transactionObj.id
-//     );
-//     return result;
-//   } catch (error) {
-//     console.log(
-//       `Looks like I'm encountering an error. ${JSON.stringify(error)}`
-//     );
-//   }
-// };
+  return result;
+};
+
+/**
+ * Add a new transaction to our database
+ *
+ * @param {SimpleTransaction} transactionObj
+ */
+const addNewTransaction = async function (transactionObj) {
+  const query = {
+    _id: transactionObj.userId,
+  }
+  const push = {
+    $push: {
+      transactions: {
+        account_id: transactionObj.accountId,
+        transaction_id: transactionObj.transactionId,
+        pending: transactionObj.pending,
+        pending_transaction_id: transactionObj.pendingTransactionId,
+        personal_finance_category: transactionObj.personalFinanceCategory,
+        date: transactionObj.date,
+        authorized_date: transactionObj.authorizedDate,
+        merchant_name: transactionObj.merchantName,
+        amount: transactionObj.amount,
+        iso_currency_code: transactionObj.isoCurrencyCode,
+      }
+    }
+  }
+  try {
+    const client = server.client;
+    const appdata = client.db("appdata");
+    const userInfo = appdata.collection("userInfo");
+    const result = await userInfo.updateOne(query, push);
+
+    if (transactionObj.pendingTransactionId != null) {
+      // This might be a good time to copy over any user-created values from
+      // that other transaction to this one.
+    }
+
+    return result;
+  } catch (error) {
+    console.log(
+      `Looks like I'm encountering an error. ${JSON.stringify(error)}`
+    );
+  }
+};
+
+/**
+ * Modify an existing transaction in our database
+ *
+ * @param {SimpleTransaction} transactionObj
+ */
+const modifyExistingTransaction = async function (transactionObj) {
+  const query = {
+    _id: transactionObj.userId,
+    'transactions.transaction_id': transactionObj.transactionId,
+  }
+  const set = {
+    $set: {
+      'transactions.$': {
+        account_id: transactionObj.accountId,
+        pending: transactionObj.pending,
+        pending_transaction_id: transactionObj.pendingTransactionId,
+        personal_finance_category: transactionObj.personalFinanceCategory,
+        date: transactionObj.date,
+        authorized_date: transactionObj.authorizedDate,
+        merchant_name: transactionObj.merchantName,
+        amount: transactionObj.amount,
+        iso_currency_code: transactionObj.isoCurrencyCode,
+      }
+    }
+  }
+  try {
+    const client = server.client;
+    const appdata = client.db("appdata");
+    const userInfo = appdata.collection("userInfo");
+    const result = await userInfo.updateOne(query, set);
+
+    return result;
+  } catch (error) {
+    console.log(
+      `Looks like I'm encountering an error. ${JSON.stringify(error)}`
+    );
+  }
+};
 
 // /**
 //  * Mark a transaction as removed from our database
@@ -274,90 +331,101 @@ const getUserList = async function () {
 //   }
 // };
 
-// /**
-//  * Actually delete a transaction from the database
-//  *
-//  * @param {string} transactionId
-//  */
-// const deleteExistingTransaction = async function (transactionId) {
-//   try {
-//     const result = await db.run(
-//       `DELETE FROM transactions WHERE id = ?`,
-//       transactionId
-//     );
-//     return result;
-//   } catch (error) {
-//     console.log(
-//       `Looks like I'm encountering an error. ${JSON.stringify(error)}`
-//     );
-//   }
-// };
+/**
+ * Actually delete a transaction from the database
+ *
+ * @param {string} transactionId
+ */
+const deleteExistingTransaction = async function (transactionId) {
+  const query = { }
+  const pull = {
+    $pull: {
+      'transactions.transaction_id': transactionId,
+    }
+  }
+  try {
+    const client = server.client;
+    const appdata = client.db("appdata");
+    const userInfo = appdata.collection("userInfo");
+    const result = await userInfo.updateOne(query, pull);
 
-// /**
-//  * Fetch transactions for our user from the database
-//  *
-//  * @param {string} userId
-//  * @param {number} maxNum
-//  */
-// const getTransactionsForUser = async function (userId, maxNum) {
-//   const results = await db.all(
-//     `SELECT transactions.*,
-//       accounts.name as account_name,
-//       items.bank_name as bank_name
-//     FROM transactions
-//     JOIN accounts ON transactions.account_id = accounts.id
-//     JOIN items ON accounts.item_id = items.id
-//     WHERE transactions.user_id = ?
-//       and is_removed = 0
-//     ORDER BY date DESC
-//     LIMIT ?`,
-//     userId,
-//     maxNum
-//   );
-//   return results;
-// };
+    return result;
+  } catch (error) {
+    console.log(
+      `Looks like I'm encountering an error. ${JSON.stringify(error)}`
+    );
+  }
+};
 
-// /**
-//  * Save our cursor to the database
-//  *
-//  * @param {string} transactionCursor
-//  * @param {string} itemId
-//  */
-// const saveCursorForItem = async function (transactionCursor, itemId) {
-//   try {
-//     await db.run(
-//       `UPDATE items SET transaction_cursor = ? WHERE id = ?`,
-//       transactionCursor,
-//       itemId
-//     );
-//   } catch (error) {
-//     console.error(
-//       `It's a big problem that I can't save my cursor. ${JSON.stringify(error)}`
-//     );
-//   }
-// };
+/**
+ * Fetch transactions for our user from the database
+ *
+ * @param {string} userId
+ * @param {number} maxNum
+ */
+const getTransactionsForUser = async function (userId, maxNum) {
+  const query = {
+    _id: userId,
+  }
+  const proj = {
+    _id: 0,
+    transactions: 1
+  }
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
+  const result = await userInfo.findOne(query, proj).transactions;
+  return result.slice(0, maxNum);
+};
+
+/**
+ * Save our cursor to the database
+ *
+ * @param {string} transactionCursor
+ * @param {string} itemId
+ */
+const saveCursorForItem = async function (transactionCursor, itemId) {
+  const query = {
+    'items.item.item_id': itemId,
+  }
+  const set = {
+    $set: {
+      'items.$.item.transaction_cursor': transactionCursor,
+    }
+  }
+  try {
+    const client = server.client;
+    const appdata = client.db("appdata");
+    const userInfo = appdata.collection("userInfo");
+    const result = await userInfo.updateOne(query, set);
+  } catch (error) {
+    console.error(
+      `It's a big problem that I can't save my cursor. ${JSON.stringify(error)}`
+    );
+  }
+};
 
 module.exports = {
   // debugExposeDb,
   getItemIdsForUser,
   getItemsAndAccessTokensForUser,
   // getAccountIdsForItem,
-  // confirmItemBelongsToUser,
+  confirmItemBelongsToUser,
   // deactivateItem,
   addUser,
   findUser,
-  getUserList,
-  //getUserRecord,
-  // getBankNamesForUser,
-  // addItem,
+  // getUserList,
+  // getUserRecord,
+  getBankNamesForUser,
+  addItem,
   // addBankNameForItem,
   // addAccount,
-  // getItemInfo,
-  // getItemInfoForUser,
-  // addNewTransaction,
-  // modifyExistingTransaction,
-  // deleteExistingTransaction,
+  getItemInfo,
+  getItemInfoForUser,
+  addNewTransaction,
+  modifyExistingTransaction,
+  deleteExistingTransaction,
   // markTransactionAsRemoved,
-  // getTransactionsForUser,
-  // saveCursorForItem,
+  getTransactionsForUser,
+  saveCursorForItem,
 };
