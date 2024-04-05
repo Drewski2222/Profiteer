@@ -74,6 +74,22 @@
   margin-right: auto;
   margin-bottom: auto;
 }
+.confirmation-register {
+  top: 700px;
+  left: 0px;
+  right: 0px;
+  width: 248px;
+  height: 82px;
+  margin: auto;
+  display: flex;
+  position: absolute;
+  text-decoration: none;
+  background-color: #111b47;
+}
+.confirmation-text05 {
+  color: rgb(255, 255, 255);
+  font-size: 25px;
+}
 .confirmation-container3 {
   flex: 0 0 auto;
   left: 0px;
@@ -86,7 +102,7 @@
   align-items: flex-start;
   flex-direction: column;
 }
-.confirmation-text05 {
+.confirmation-text06 {
   left: 46px;
   color: var(--dl-color-colour_logo-primary);
   bottom: var(--dl-space-space-unit);
@@ -110,7 +126,7 @@
 .confirmation-navlink {
   display: contents;
 }
-.confirmation-text06 {
+.confirmation-text07 {
   color: #37447E;
   text-decoration: none;
 }
@@ -129,17 +145,17 @@
   color: rgb(55, 68, 126);
   text-decoration: none;
 }
-.confirmation-register {
+.confirmation-register1 {
   width: 125px;
   height: 2px;
   display: flex;
   text-decoration: none;
   background-color: #111b47;
 }
-.confirmation-text07 {
+.confirmation-text08 {
   color: #ffffff;
 }
-.confirmation-register1 {
+.confirmation-register2 {
   width: 125px;
   height: 2px;
   display: flex;
@@ -148,7 +164,7 @@
   text-decoration: none;
   background-color: transparent;
 }
-.confirmation-text08 {
+.confirmation-text09 {
   color: #111b47;
 }
 .confirmation-burger-menu {
@@ -188,7 +204,7 @@
   margin-bottom: var(--dl-space-space-threeunits);
   justify-content: space-between;
 }
-.confirmation-text09 {
+.confirmation-text10 {
   color: rgb(255, 255, 255);
   font-size: 32px;
   font-style: normal;
@@ -268,17 +284,14 @@
   .confirmation-container4 {
     margin-bottom: var(--dl-space-space-unit);
   }
-  .confirmation-text09 {
+  .confirmation-text10 {
     color: #000000;
   }
   .confirmation-nav2 {
     gap: var(--dl-space-space-unit);
   }
-  .confirmation-text10 {
-    color: #000000;
-  }
   .confirmation-text11 {
-    color: rgb(0, 0, 0);
+    color: #000000;
   }
   .confirmation-text12 {
     color: rgb(0, 0, 0);
@@ -287,6 +300,9 @@
     color: rgb(0, 0, 0);
   }
   .confirmation-text14 {
+    color: rgb(0, 0, 0);
+  }
+  .confirmation-text15 {
     color: rgb(0, 0, 0);
   }
   .confirmation-button-container {
@@ -301,7 +317,7 @@
     border-width: 1px;
     margin-right: 0px;
   }
-  .confirmation-register2 {
+  .confirmation-register3 {
     width: 100%;
     border-width: 1px;
   }

@@ -24,14 +24,17 @@ const Confirmation = (props) => {
                 <br></br>
                 <span>your financial journey with Profiteer!</span>
               </h1>
+              <Link to="/CONNECT-TO-PLAID-ROUTE-HERE" className="confirmation-register button">
+                <span className="confirmation-text05">Connect to Plaid</span>
+              </Link>
             </div>
           </div>
           <div className="confirmation-container3">
-            <span className="confirmation-text05">© Profiteer 2024</span>
+            <span className="confirmation-text06">© Profiteer 2024</span>
           </div>
           <header data-thq="thq-navbar" className="confirmation-navbar">
             <Link to="/" className="confirmation-navlink">
-              <h2 className="confirmation-text06">Profiteer</h2>
+              <h2 className="confirmation-text07">Profiteer</h2>
             </Link>
             <div
               data-thq="thq-navbar-nav"
@@ -47,11 +50,11 @@ const Confirmation = (props) => {
                   About Us
                 </Link>
               </nav>
-              <Link to="/sign-in" className="confirmation-register button">
-                <span className="confirmation-text07">Log In</span>
+              <Link to="/sign-in" className="confirmation-register1 button">
+                <span className="confirmation-text08">Log In</span>
               </Link>
-              <Link to="/register" className="confirmation-register1 button">
-                <span className="confirmation-text08">Sign Up</span>
+              <Link to="/register" className="confirmation-register2 button">
+                <span className="confirmation-text09">Sign Up</span>
               </Link>
             </div>
             <div
@@ -72,7 +75,7 @@ const Confirmation = (props) => {
                 className="confirmation-nav1"
               >
                 <div className="confirmation-container4">
-                  <h2 className="confirmation-text09">OnConf</h2>
+                  <h2 className="confirmation-text10">OnConf</h2>
                   <div
                     data-thq="thq-close-menu"
                     className="confirmation-menu-close"
@@ -90,15 +93,15 @@ const Confirmation = (props) => {
                   data-role="Nav"
                   className="confirmation-nav2"
                 >
-                  <span className="navLink confirmation-text10">About</span>
-                  <span className="navLink confirmation-text11">Features</span>
-                  <span className="navLink confirmation-text12">Pricing</span>
-                  <span className="navLink confirmation-text13">Team</span>
-                  <span className="navLink confirmation-text14">Blog</span>
+                  <span className="navLink confirmation-text11">About</span>
+                  <span className="navLink confirmation-text12">Features</span>
+                  <span className="navLink confirmation-text13">Pricing</span>
+                  <span className="navLink confirmation-text14">Team</span>
+                  <span className="navLink confirmation-text15">Blog</span>
                 </nav>
                 <div className="confirmation-button-container">
                   <button className="confirmation-login button">Login</button>
-                  <button className="button confirmation-register2">
+                  <button className="button confirmation-register3">
                     Register
                   </button>
                 </div>
