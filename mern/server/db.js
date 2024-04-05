@@ -3,6 +3,7 @@
 // const crypto = require("crypto");
 const { SimpleTransaction } = require("./simpleTransactionObject");
 const server = require("./server.js");
+const { LinkTokenCreateRequestAuthFlowTypeEnum } = require("plaid");
 
 // // You may want to have this point to different databases based on your environment
 // const databaseFile = "./database/appdata.db";
@@ -388,6 +389,64 @@ const saveCursorForItem = async function (transactionCursor, itemId) {
   }
 };
 
+/**
+ * Aggregate transactions for each user based on optional filters
+ * 
+ * @param {string} userId
+ * @param {string} personalFinanceCategory
+ * @param {string} dateRangeStart
+ * @param {string} dateRangeEnd
+ * @param {string} pending
+ * @param {string} merchantName
+ * @param {string} amountRangeStart
+ * @param {string} amountRangeEnd
+ */
+const aggregateTransactions = async function (userId, personalFinanceCategory = null, dateRangeStart = null, dateRangeEnd = null, pending = null, merchantName = null, amountRangeStart = null, amountRangeEnd = null) {
+  query = {
+    user_id: userId,
+  }
+  
+  if (personalFinanceCategory != null){
+    query.personal_finance_category = personalFinanceCategory;
+  }
+  if (dateRangeStart != null && dateRangeEnd != null){
+    query.date = {$gte: ISODate(dateRangeStart), $lte: ISODate(dateRangeEnd)};
+  }
+  if (dateRangeStart != null){
+    query.date = {$gte: ISODate(dateRangeStart)};
+  }
+  if (dateRangeEnd != null){
+    query.date = {$lte: ISODate(dateRangeEnd)};
+  }
+  if (pending != null){
+    query.pending = pending;
+  }
+  if (merchantName != null){
+    query.merchant_name = merchantName;
+  }
+  if (amountRangeStart != null && amountRangeEnd != null){
+    query.amount = {$gte: amountRangeStart, $lte: amountRangeEnd};
+  }
+  if (amountRangeStart != null){
+    query.amount = {$gte: amountRangeEnd};
+  }
+  if (amountRangeEnd != null){
+    query.amount = {$lte: amountRangeEnd};
+  }
+
+  try {
+    const client = server.client;
+    const appdata = client.db("appdata");
+    const transactions = appdata.collection("transactions");
+    const result = await transactions.findMany(query);
+    return result;
+  } catch (error) {
+    console.error(
+      `Looks like I'm encountering an error. ${JSON.stringify(error)}`
+    );
+  }
+}
+
 module.exports = {
   // debugExposeDb,
   getItemIdsForUser,
@@ -411,4 +470,5 @@ module.exports = {
   // markTransactionAsRemoved,
   getTransactionsForUser,
   saveCursorForItem,
+  aggregateTransactions,
 };
