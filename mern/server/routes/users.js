@@ -111,4 +111,41 @@ router.get("/get_my_info", async (req, res, next) => {
   }
 });
 
+/**
+ * Get the aggregated transaction data for a user based on specified filters
+ */
+router.get("/agg_data", async (req, res, next) => {
+  try{
+    const userId = getLoggedInUserId(req);
+    console.log(`Your userID is ${userId}`);
+    let result = 0;
+    if (userId != null){
+      const personalFinanceCategory = req.body.personalFinanceCategory ?? null;
+      const dateRangeStart = req.body.dateRangeStart ?? null;
+      const dateRangeEnd = req.body.dateRangeEnd ?? null;
+      const pending = req.body.pending ?? null;
+      const merchantName = req.body.merchantName ?? null;
+      const amountRangeStart = req.body.amountRangeStart ?? null;
+      const amountRangeEnd = req.body.amountRangeEnd ?? null;
+
+      const transactions = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd);
+      if (transactions == null) {
+        // This probably means your cookies are messed up.
+        res.clearCookie("signedInUser");
+        res.json({ userInfo: null });
+        return;
+      } else {
+        for (var i = 0; i < transactions.length; i++){
+          result += transactions[i].amount;
+        }
+      }
+    } else {
+      result = null;
+    }
+    res.json({ aggData: result });
+  } catch (error) {
+    next(error);
+  }
+});
+
 module.exports = router;
