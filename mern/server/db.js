@@ -96,21 +96,21 @@ const addUser = async function (userId, email, password, username) {
   const client = server.client;
   const appdata = client.db("appdata");
   const userInfo = appdata.collection("userInfo");
-  let find;
+  // let find;
 
-  let query = {
-    email: email,
-  }
+  // let query = {
+  //   email: email,
+  // }
 
-  find = await userInfo.findOne(query);
-  if (find.email == email) throw "Account with that email already exists";
+  // find = await userInfo.findOne(query);
+  // if (find.email == email) throw "Account with that email already exists";
 
-  query = {
-    username: username,
-  }
+  // query = {
+  //   username: username,
+  // }
 
-  find = await userInfo.findOne(query);
-  if (find.username == username) throw "Account with that username already exists";
+  // find = await userInfo.findOne(query);
+  // if (find.username == username) throw "Account with that username already exists";
 
   const doc = {
     user_id: userId,
