@@ -17,55 +17,70 @@ const { LinkTokenCreateRequestAuthFlowTypeEnum } = require("plaid");
 // };
 
 const getItemIdsForUser = async function (userId) {
-  let ids = [];
-
   const query = {
-    _id: userId,
-  }
+    user_id: userId,
+  };
+
+  const proj = {
+    _id: 0,
+    item_id: 1,
+  };
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const user = await userInfo.findOne(query);
+  const items = appdata.collection("items");
+  const itemIds = await items.findMany(query, proj);
 
-  for (let i = 0; i < user.items.length; i++){
-    ids.push(user.items[i].item.item_id);
-  }
-
-  console.log(ids);
+  return itemIds;
 };
 
 const getItemsAndAccessTokensForUser = async function (userId) {
   const query = {
-    _id: userId,
-  }
+    user_id: userId,
+  };
+
+  const proj = {
+    _id: 0,
+    item_id: 1,
+    access_token: 1,
+  };
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const user = await userInfo.findOne(query);
+  const items = appdata.collection("items");
+  const itemAccessTokens = await items.findMany(query, proj);
 
-  return user.items;
+  return itemAccessTokens;
 };
 
-// const getAccountIdsForItem = async function (itemId) {
-//   const accounts = await db.all(
-//     `SELECT id FROM accounts WHERE item_id = ?`,
-//     itemId
-//   );
-//   return accounts;
-// };
+const getAccountIdsForItem = async function (itemId) {
+  const query = {
+    item_id: itemId,
+  };
+
+  const proj = {
+    _id: 0,
+    account_id: 1,
+  };
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const accounts = appdata.collection("accounts");
+  const accountIds = await accounts.findMany(query, proj);
+
+  return accountIds;
+};
 
 const confirmItemBelongsToUser = async function (possibleItemId, userId) {
   const query = {
-    _id: userId,
-    "items.item.item_id": possibleItemId,
+    user_id: userId,
+    item_id: possibleItemId,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const result = await userInfo.findOne(query);
+  const items = appdata.collection("items");
+  const result = await items.findOne(query);
 
   console.log(result);
   if (result === undefined) {
@@ -78,18 +93,49 @@ const confirmItemBelongsToUser = async function (possibleItemId, userId) {
   }
 };
 
-// const deactivateItem = async function (itemId) {
-//   const updateResult = await db.run(
-//     `UPDATE items SET access_token = 'REVOKED', is_active = 0 WHERE id = ?`,
-//     itemId
-//   );
-//   return updateResult;
-//   // If your user wanted all the data associated with this bank removed, you
-//   // could...
-//   // - Delete transactions for accounts belonging to this item
-//   // - Delete accounts that belong to this item
-//   // - Delete the item itself from the database
-// };
+const deleteItem = async function (itemId, deleteAccounts, deleteTransactions) {
+  const query = {
+    item_id: itemId,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const items = appdata.collection("items");
+  let result = {};
+
+  if (deleteAccounts) {
+    const accounts = appdata.collection("accounts");
+    result.accounts_delete = await accounts.deleteMany(query);
+  }
+  if (deleteTransactions) {
+    const transactions = appdata.collection("transactions");
+    result.transactions_delete = await transactions.deleteMany(query);
+  }
+  result.item_delete = await items.deleteOne(query);
+
+  return result;
+};
+
+const deleteAccount = async function (accountId, deleteTransactions) {
+  const query = {
+    account_id: accountId,
+  }
+
+  let result = {};
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const accounts = appdata.collection("accounts");
+
+  if (deleteTransactions) {
+    const transactions = appdata.collection("transactions");
+    result.transactions_delete = await transactions.deleteMany(query);
+  }
+
+  result.account_delete = await accounts.deleteOne(query);
+
+  return result;
+}
 
 const addUser = async function (userId, email, password, username) {
 
@@ -131,15 +177,14 @@ const addUser = async function (userId, email, password, username) {
 };
 
 const findUser = async function (email, password) {
-
-  const client = server.client;
-  const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-
   const query = {
     email: email,
     password: password,
   }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const userInfo = appdata.collection("userInfo");
 
   const result = await userInfo.findOne(query);
   
@@ -157,94 +202,86 @@ const findUser = async function (email, password) {
 // };
 
 const getBankNamesForUser = async function (userId) {
-  let i_ids = [];
-
   const query = {
-    _id: userId,
+    user_id: userId,
+  }
+
+  const proj = {
+    _id: 0,
+    institution_id: 1,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const user = await userInfo.findOne(query);
-
-  for (let i = 0; i < user.items.length; i++){
-    i_ids.push(user.items[i].item.institution_id);
-  }
+  const items = appdata.collection("items");
+  const institutionIds = await items.findMany(query, proj);
 
   // make API request to get name from id addBankNameForItem()
 
-  return i_ids;
+  return institutionNames;
 };
 
 const addItem = async function (itemId, userId, accessToken) {
-  const query = {
-    _id: userId,
-  }
-  const push = {
-    $push: {
-      items: {
-        item_id: itemId,
-        access_token: accessToken,
-      }
-    }
+  const item = {
+    user_id: userId,
+    item_id: itemId,
+    access_token: accessToken,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const result = await userInfo.updateOne(query, push);
+  const items = appdata.collection("items");
+  const result = await items.insertOne(item);
 
   return result;
 };
 
-// const addBankNameForItem = async function (itemId, institutionName) {
-//   const result = await db.run(
-//     `UPDATE items SET bank_name=? WHERE id =?`,
-//     institutionName,
-//     itemId
-//   );
-//   return result;
-// };
+const addBankNameForItem = async function (itemId, institutionName) {
+  const result = await db.run(
+    `UPDATE items SET bank_name=? WHERE id =?`,
+    institutionName,
+    itemId
+  );
+  return result;
+};
 
-// const addAccount = async function (accountId, itemId, acctName) {
-//   await db.run(
-//     `INSERT OR IGNORE INTO accounts(id, item_id, name) VALUES(?, ?, ?)`,
-//     accountId,
-//     itemId,
-//     acctName
-//   );
-// };
+const addAccount = async function (accountId, itemId, accountName) {
+  const account = {
+    account_id: accountId,
+    item_id: itemId,
+    account_name: accountName,
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const accounts = appdata.collection("accounts");
+  const result = await accounts.insertOne(account);
+
+  return result;
+};
 
 const getItemInfo = async function (itemId) {
   const query = {
-    "items.item.item_id": itemId,
-  }
-  const proj = {
-    "items.item": 1,
+    item_id: itemId,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const result = await userInfo.find(query, proj);
+  const items = appdata.collection("items");
+  const result = await items.findOne(query);
 
   return result;
 };
 
-const getItemInfoForUser = async function (itemId, userId) {
+const getItemInfoForUser = async function (userId) {
   const query = {
-    _id: userId,
-    "items.item.item_id": itemId,
-  }
-  const proj = {
-    "items.item": 1,
+    user_id: userId,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
-  const userInfo = appdata.collection("userInfo");
-  const result = await userInfo.findOne(query, proj);
+  const items = appdata.collection("items");
+  const result = await items.findMany(query);
 
   return result;
 };
@@ -391,18 +428,19 @@ const getTransactionsForUser = async function (userId) {
  */
 const saveCursorForItem = async function (transactionCursor, itemId) {
   const query = {
-    'items.item.item_id': itemId,
+    item_id: itemId,
   }
-  const set = {
-    $set: {
-      'items.$.item.transaction_cursor': transactionCursor,
-    }
+  const cursor = {
+    transaction_cursor: transactionCursor,
   }
+
   try {
     const client = server.client;
     const appdata = client.db("appdata");
     const userInfo = appdata.collection("userInfo");
-    const result = await userInfo.updateOne(query, set);
+    const result = await userInfo.updateOne(query, cursor);
+
+    return result;
   } catch (error) {
     console.error(
       `It's a big problem that I can't save my cursor. ${JSON.stringify(error)}`
@@ -472,9 +510,10 @@ module.exports = {
   // debugExposeDb,
   getItemIdsForUser,
   getItemsAndAccessTokensForUser,
-  // getAccountIdsForItem,
+  getAccountIdsForItem,
   confirmItemBelongsToUser,
-  // deactivateItem,
+  deleteItem,
+  deleteAccount,
   addUser,
   findUser,
   // getUserList,
@@ -482,7 +521,7 @@ module.exports = {
   getBankNamesForUser,
   addItem,
   // addBankNameForItem,
-  // addAccount,
+  addAccount,
   getItemInfo,
   getItemInfoForUser,
   addNewTransaction,
