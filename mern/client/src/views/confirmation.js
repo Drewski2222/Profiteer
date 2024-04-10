@@ -6,6 +6,64 @@ import { Helmet } from 'react-helmet'
 import './confirmation.css'
 
 const Confirmation = (props) => {
+  // Plaid API used below
+  let linkTokenData;
+
+  const initializeLink = async function () {
+    const linkTokenResponse = await fetch(`/api/create_link_token`);
+    linkTokenData = await linkTokenResponse.json();
+    localStorage.setItem("linkTokenData", JSON.stringify(linkTokenData));
+    document.querySelector("#startLink").classList.remove("opacity-50");
+    console.log(JSON.stringify(linkTokenData));
+  };
+  
+  const startLink = function () {
+    if (linkTokenData === undefined) {
+      return;
+    }
+    const handler = Plaid.create({
+      token: linkTokenData.link_token,
+      onSuccess: async (publicToken, metadata) => {
+        console.log(
+          `I have a public token: ${publicToken} I should exchange this`
+        );
+        await exchangeToken(publicToken);
+      },
+      onExit: (err, metadata) => {
+        console.log(
+          `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
+            metadata
+          )}`
+        );
+      },
+      onEvent: (eventName, metadata) => {
+        console.log(`Event ${eventName}`);
+      },
+    });
+    handler.open();
+  };
+  
+  async function exchangeToken(publicToken) {
+    const tokenExchangeResponse = await fetch(`/api/exchange_public_token`, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ public_token: publicToken }),
+    });
+    // This is where I'd add our error checking... if our server returned any
+    // errors.
+    console.log("trying to exchange token");
+    const tokenExchangeData = await tokenExchangeResponse.json();
+    console.log("Done exchanging our token");
+
+    // TO DO: ADD LINK TO DASHBOARD WITH PLAID CONNECTION CONFIRMATION
+    //window.location.href = "index.html";
+  }
+  
+  document.querySelector("#startLink").addEventListener("click", startLink);
+  
+  initializeLink();
+
+
   return (
     <div className="confirmation-container">
       <Helmet>
@@ -24,7 +82,7 @@ const Confirmation = (props) => {
                 <br></br>
                 <span>your financial journey with Profiteer!</span>
               </h1>
-              <Link to="/CONNECT-TO-PLAID-ROUTE-HERE" className="confirmation-register button">
+              <Link to="/https://cdn.plaid.com/link/v2/stable/link-initialize.js" className="confirmation-register button">
                 <span className="confirmation-text05">Connect to Plaid</span>
               </Link>
             </div>
