@@ -27,6 +27,13 @@ router.post("/register", async (req, res, next) => {
         httpOnly: true,
       });
     }
+    else if (result.error_code == 600 || result.error_code == 601) {
+      throw {
+        response: {
+          data: result.error_message,
+        }
+      }
+    }
     res.json(result);
   } catch (error) {
     next(error);
