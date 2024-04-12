@@ -59,7 +59,7 @@ const Confirmation = (props) => {
     //window.location.href = "index.html";
   }
   
-  document.querySelector("#startLink").addEventListener("click", startLink);
+  // document.querySelector("#startLink").addEventListener("click", startLink);
   
   initializeLink();
 
