@@ -2,10 +2,27 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 import { Helmet } from 'react-helmet'
-
+import { useEffect } from 'react'
+import renderDonutChart from '../components/charts'
 import './dashboard.css'
 
 const Dashboard = (props) => {
+  useEffect(() => {
+    // Sample data for the donut chart
+    const data = [
+      { label: "Category 1", value: 30 },
+      { label: "Category 2", value: 20 },
+      { label: "Category 3", value: 50 }
+    ];
+
+    // Call the render function
+    if (!window.chartRendered) {
+      renderDonutChart(data, '.dashboard-dashboard-left');
+      window.chartRendered = true;
+    }
+  }, []);
+
+  
   return (
     <div className="dashboard-container">
       <Helmet>

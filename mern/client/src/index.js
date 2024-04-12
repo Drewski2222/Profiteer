@@ -13,7 +13,7 @@ import Confirmation from './views/confirmation'
 import SignIn from './views/sign-in'
 import About from './views/about'
 import Home from './views/home'
-import Dashobard from './views/dashboard'
+import Dashboard from './views/dashboard'
 import NotFound from './views/not-found'
 
 const App = () => {
@@ -22,9 +22,9 @@ const App = () => {
       <Switch>
         <Route component={Register} exact path="/register" />
         <Route component={Confirmation} exact path="/confirmation" />
-        <Route component={Dashobard} exact path="/dashboard" />
         <Route component={SignIn} exact path="/sign-in" />
         <Route component={About} exact path="/about" />
+        <Route component={Dashboard} exact path="/dashboard" />
         <Route component={Home} exact path="/" />
         <Route component={NotFound} path="**" />
         <Redirect to="**" />

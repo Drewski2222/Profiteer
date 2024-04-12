@@ -6,6 +6,7 @@
     "@craco/craco": "^5.9.0",
     "axios": "^1.6.8",
     "craco": "^0.0.3",
+    "d3": "^7.9.0",
     "framer-motion": "^6.5.1",
     "prop-types": "15.7.2",
     "react": "^17.0.2",
