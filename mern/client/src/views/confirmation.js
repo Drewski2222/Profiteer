@@ -9,7 +9,13 @@ const Confirmation = (props) => {
   // Plaid API used below
   let linkTokenData;
 
+  // TO DO: GET THE BUTTON TO CALL THESE FUNCTION!!!!!!!!!!!!
+  const helloWorld = function() {
+    console.log("Sup?");
+  }
+
   const initializeLink = async function () {
+    console.log("Sup?");
     const linkTokenResponse = await fetch(`/api/create_link_token`);
     linkTokenData = await linkTokenResponse.json();
     localStorage.setItem("linkTokenData", JSON.stringify(linkTokenData));
@@ -57,6 +63,7 @@ const Confirmation = (props) => {
 
     // TO DO: ADD LINK TO DASHBOARD WITH PLAID CONNECTION CONFIRMATION
     //window.location.href = "index.html";
+    history.pushState('/dashboard');
   }
   
   // document.querySelector("#startLink").addEventListener("click", startLink);
@@ -82,9 +89,23 @@ const Confirmation = (props) => {
                 <br></br>
                 <span>your financial journey with Profiteer!</span>
               </h1>
-              <Link to="/https://cdn.plaid.com/link/v2/stable/link-initialize.js" className="confirmation-register button">
+              
+             
+
+
+              <button
+                type="submit"
+                className="confirmation-register button"
+                onClick={helloWorld}
+              >
                 <span className="confirmation-text05">Connect to Plaid</span>
-              </Link>
+              </button>
+
+
+
+
+
+
             </div>
           </div>
           <div className="confirmation-container3">
