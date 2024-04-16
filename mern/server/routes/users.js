@@ -123,7 +123,9 @@ router.get("/get_my_info", async (req, res, next) => {
  */
 router.get("/agg_data", async (req, res, next) => {
   try{
-    const userId = getLoggedInUserId(req);
+    // const userId = getLoggedInUserId(req);
+    //testing
+    const userId = "001"
     console.log(`Your userID is ${userId}`);
     let result = 0;
     if (userId != null){

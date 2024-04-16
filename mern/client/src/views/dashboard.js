@@ -1,18 +1,35 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-
 import { Helmet } from 'react-helmet'
 import { useEffect } from 'react'
 import renderDonutChart from '../components/charts'
 import './dashboard.css'
+import axios from 'axios'
+
 
 const Dashboard = (props) => {
   useEffect(() => {
+    let values = [];
+    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'GENERAL_MERCHANDISE'}).then((response) => {
+      values[0] = (response.agg_data)
+    })
+
+    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'GROCERIES'}).then((response) => {
+      values[1] = (response.agg_data)
+    })
+
+    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'UTILITIES'}).then((response) => {
+      values[2] = (response.agg_data)
+    })
+    .catch((error) => {
+      console.log(error);
+    })
     // Sample data for the donut chart
+    console.log(values);
     const data = [
-      { label: "Category 1", value: 30 },
-      { label: "Category 2", value: 20 },
-      { label: "Category 3", value: 50 }
+      { label: "Merch", value: values[0] },
+      { label: "Groceries", value: values[1] },
+      { label: "Utilities", value: values[2] }
     ];
 
     // Call the render function
