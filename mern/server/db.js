@@ -29,7 +29,8 @@ const getItemIdsForUser = async function (userId) {
   const client = server.client;
   const appdata = client.db("appdata");
   const items = appdata.collection("items");
-  const itemIds = await items.findMany(query, proj);
+  //const itemIds = await items.findMany(query, proj);
+  const itemIds = await items.find().toArray(query, proj);
 
   return itemIds;
 };

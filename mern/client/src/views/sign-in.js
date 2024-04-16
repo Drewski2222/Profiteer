@@ -1,11 +1,46 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
-
+import axios from 'axios'
+import { Link, useHistory } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
 import './sign-in.css'
 
 const SignIn = (props) => {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
+  const history = useHistory();
+
+  // handle log in
+  const handleSubmit = (e) => {
+
+  // send data to backend
+  axios.post("http://localhost:5000/server/users/sign-in", {
+    email: email,
+    password : password,
+  }).then((response)=> {
+    console.log(response);
+    history.push('/dashboard');
+  })
+   // incorrect password/username
+  .catch((error) => {
+    if(error.response && error.response.status === 500) {
+      // display message
+      window.alert('Error: Incorrect username or password. Please try again or create an account.');
+      return;
+    } else {
+      // other errors
+      console.error('Unexepected error:', error);
+    }
+  });
+  };
+    
+  // enter button submission
+  const handleKey = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };  
+
   return (
     <div className="sign-in-container">
       <Helmet>
@@ -113,17 +148,33 @@ const SignIn = (props) => {
               <h1 className="sign-in-text09 profiteerheadings">
                 Welcome Back, Profiteer!
               </h1>
-              <span className="sign-in-text10">Email/Username</span>
+              <span className="sign-in-text10">Email</span>
               <div className="sign-in-rectangle5">
-                <input type="email" className="sign-in-textinput input" />
+                <input
+                type="email"
+                className="sign-in-textinput input"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onKeyDown={handleKey} 
+                />
               </div>
               <span className="sign-in-text11">
                 <span>Password</span>
               </span>
               <div className="sign-in-rectangle7">
-                <input type="password" className="sign-in-textinput1 input" />
+                <input
+                type="password"
+                className="sign-in-textinput1 input"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                onKeyDown={handleKey}
+                />
               </div>
-              <button type="submit" className="sign-in-register3 button">
+              <button
+              type="submit"
+              className="sign-in-register3 button"
+              onClick={handleSubmit}
+              >
                 <span className="sign-in-text13">Log In</span>
               </button>
             </div>

@@ -41,7 +41,17 @@ const Register = (props) => {
       }).then((response)=> {
         console.log(response);
         history.push('/confirmation');
-      }).catch(error => console.log(error.response.data))
+      })
+      .catch((error) => {
+        if(error.response && error.response.status === 500) {
+          // display message stating account already exists
+          window.alert('Error: Account already exists. Please log in.');
+          return;
+        } else {
+          // other errors
+          console.error('Unexepected error:', error);
+        }
+      });
   };
 
     // enter button submission
@@ -49,7 +59,7 @@ const Register = (props) => {
       if (e.key === 'Enter') {
         handleSubmit(e);
       }
-    }  
+    };  
 
   return (
     <div className="register-container">
