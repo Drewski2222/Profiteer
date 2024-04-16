@@ -148,10 +148,7 @@ const syncTransactions = async function (itemId) {
   await Promise.all(
     allData.removed.map(async (txnObj) => {
       console.log(`I want to remove ${txnObj.transaction_id}`);
-      // const result = await db.deleteExistingTransaction(
-      //   txnObj.transaction_id
-      // );
-      const result = await db.markTransactionAsRemoved(txnObj.transaction_id);
+      const result = await db.deleteExistingTransaction(txnObj.transaction_id);
       if (result) {
         summary.removed += result.changes;
       }
@@ -175,8 +172,7 @@ const syncTransactions = async function (itemId) {
 router.get("/list", async (req, res, next) => {
   try {
     const userId = getLoggedInUserId(req);
-    const maxCount = req.params.maxCount ?? 50;
-    const transactions = await db.getTransactionsForUser(userId, maxCount);
+    const transactions = await db.getTransactionsForUser(userId);
     res.json(transactions);
   } catch (error) {
     console.log(`Running into an error!`);
