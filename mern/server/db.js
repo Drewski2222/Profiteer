@@ -461,7 +461,7 @@ const saveCursorForItem = async function (transactionCursor, itemId) {
  * @param {string} amountRangeStart
  * @param {string} amountRangeEnd
  */
-const aggregateTransactions = async function (userId, personalFinanceCategory = null, dateRangeStart = null, dateRangeEnd = null, pending = null, merchantName = null, amountRangeStart = null, amountRangeEnd = null) {
+const aggregateTransactions = async function (userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd) {
   query = {
     user_id: userId,
   }
