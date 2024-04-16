@@ -20,7 +20,7 @@ router.post("/generate_link_token", async (req, res, next) => {
     const tokenResponse = await plaidClient.linkTokenCreate({
       user: userObject,
       products: ["transactions"],
-      client_name: "Where'd My Money Go?",
+      client_name: "Profiteer",
       language: "en",
       country_codes: ["US"],
       webhook: WEBHOOK_URL,

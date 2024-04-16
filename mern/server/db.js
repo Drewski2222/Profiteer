@@ -49,7 +49,7 @@ const getItemsAndAccessTokensForUser = async function (userId) {
   const client = server.client;
   const appdata = client.db("appdata");
   const items = appdata.collection("items");
-  const itemAccessTokens = await items.findMany(query, proj);
+  const itemAccessTokens = await items.find(query, proj);
 
   return itemAccessTokens;
 };
@@ -67,7 +67,7 @@ const getAccountIdsForItem = async function (itemId) {
   const client = server.client;
   const appdata = client.db("appdata");
   const accounts = appdata.collection("accounts");
-  const accountIds = await accounts.findMany(query, proj);
+  const accountIds = await accounts.find(query, proj);
 
   return accountIds;
 };
@@ -209,15 +209,13 @@ const getBankNamesForUser = async function (userId) {
 
   const proj = {
     _id: 0,
-    institution_id: 1,
+    institution_name: 1,
   }
 
   const client = server.client;
   const appdata = client.db("appdata");
   const items = appdata.collection("items");
-  const institutionIds = await items.findMany(query, proj);
-
-  // make API request to get name from id addBankNameForItem()
+  const institutionNames = await items.find(query, proj);
 
   return institutionNames;
 };
@@ -238,11 +236,21 @@ const addItem = async function (itemId, userId, accessToken) {
 };
 
 const addBankNameForItem = async function (itemId, institutionName) {
-  const result = await db.run(
-    `UPDATE items SET bank_name=? WHERE id =?`,
-    institutionName,
-    itemId
-  );
+  const query = {
+    item_id: itemId,
+  }
+  
+  const set = {
+    $set: {
+      institution_name: institutionName,
+    }
+  }
+
+  const client = server.client;
+  const appdata = client.db("appdata");
+  const items = appdata.collection("items");
+  const result = await items.updateOne(query, set);
+
   return result;
 };
 
@@ -282,7 +290,7 @@ const getItemInfoForUser = async function (userId) {
   const client = server.client;
   const appdata = client.db("appdata");
   const items = appdata.collection("items");
-  const result = await items.findMany(query);
+  const result = await items.find(query);
 
   return result;
 };
@@ -417,7 +425,7 @@ const getTransactionsForUser = async function (userId) {
   const client = server.client;
   const appdata = client.db("appdata");
   const transactions = appdata.collection("transactions");
-  const result = await transactions.findMany(query);
+  const result = await transactions.find(query);
   return result;
 };
 
@@ -528,7 +536,7 @@ module.exports = {
   // getUserRecord,
   getBankNamesForUser,
   addItem,
-  // addBankNameForItem,
+  addBankNameForItem,
   addAccount,
   getItemInfo,
   getItemInfoForUser,
