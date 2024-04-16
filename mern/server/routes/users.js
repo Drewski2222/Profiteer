@@ -127,31 +127,18 @@ router.get("/agg_data", async (req, res, next) => {
     //testing
     const userId = "001"
     console.log(`Your userID is ${userId}`);
-    let result = 0;
-    if (userId != null){
-      const personalFinanceCategory = req.body.personalFinanceCategory ?? null;
-      const dateRangeStart = req.body.dateRangeStart ?? null;
-      const dateRangeEnd = req.body.dateRangeEnd ?? null;
-      const pending = req.body.pending ?? null;
-      const merchantName = req.body.merchantName ?? null;
-      const amountRangeStart = req.body.amountRangeStart ?? null;
-      const amountRangeEnd = req.body.amountRangeEnd ?? null;
 
-      const transactions = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd);
-      if (transactions == null) {
-        // This probably means your cookies are messed up.
-        res.clearCookie("signedInUser");
-        res.json({ userInfo: null });
-        return;
-      } else {
-        for (var i = 0; i < transactions.length; i++){
-          result += transactions[i].amount;
-        }
-      }
-    } else {
-      result = null;
-    }
-    res.json({ aggData: result });
+    const personalFinanceCategory = req.query.personalFinanceCategory;
+    const dateRangeStart = req.query.dateRangeStart;
+    const dateRangeEnd = req.query.dateRangeEnd;
+    const pending = req.query.pending;
+    const merchantName = req.query.merchantName;
+    const amountRangeStart = req.query.amountRangeStart;
+    const amountRangeEnd = req.query.amountRangeEnd;
+
+    const result = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd);
+
+    res.json({ agg_data: result });
   } catch (error) {
     next(error);
   }

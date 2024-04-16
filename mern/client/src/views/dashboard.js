@@ -9,17 +9,32 @@ import axios from 'axios'
 
 const Dashboard = (props) => {
   useEffect(() => {
-    let values = [];
-    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'GENERAL_MERCHANDISE'}).then((response) => {
-      values[0] = (response.agg_data)
+    let values = [1, 1, 1];
+    axios.get('http://localhost:5000/server/users/agg_data', 
+    {
+      params: {
+        personalFinanceCategory: 'GENERAL_MERCHANDISE',
+      }
+    }).then((response) => {
+      values[0] = (response.data.agg_data)
     })
 
-    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'GROCERIES'}).then((response) => {
-      values[1] = (response.agg_data)
+    axios.get('http://localhost:5000/server/users/agg_data', 
+    {
+      params: {
+        personalFinanceCategory: 'GROCERIES',
+      }
+    }).then((response) => {
+      values[1] = (response.data.agg_data)
     })
 
-    axios.get('http://localhost:5000/server/users/agg_data', {personalFinanceCategory:'UTILITIES'}).then((response) => {
-      values[2] = (response.agg_data)
+    axios.get('http://localhost:5000/server/users/agg_data', 
+    {
+      params: {
+        personalFinanceCategory: 'UTILITIES',
+      }
+    }).then((response) => {
+      values[2] = (response.data.agg_data)
     })
     .catch((error) => {
       console.log(error);

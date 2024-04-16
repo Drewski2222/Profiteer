@@ -79,8 +79,6 @@ app.use(errorHandler);
 app.listen(port, () => {
   // perform a database connection when server starts
   exports.client = conn.connectClient();
-  //conn.getFirstName();
-  db.getItemIdsForUser(new ObjectId('65e10fd3b7e92e98bd08a307'));
   console.log(`Server is running on port: ${port}`);
 });
 

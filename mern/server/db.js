@@ -466,40 +466,47 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
     user_id: userId,
   }
   
-  if (personalFinanceCategory != null){
+  if (personalFinanceCategory != undefined){
     query.personal_finance_category = personalFinanceCategory;
   }
-  if (dateRangeStart != null && dateRangeEnd != null){
+  if (dateRangeStart != undefined && dateRangeEnd != undefined){
     query.date = {$gte: ISODate(dateRangeStart), $lte: ISODate(dateRangeEnd)};
   }
-  if (dateRangeStart != null){
+  if (dateRangeStart != undefined){
     query.date = {$gte: ISODate(dateRangeStart)};
   }
-  if (dateRangeEnd != null){
+  if (dateRangeEnd != undefined){
     query.date = {$lte: ISODate(dateRangeEnd)};
   }
-  if (pending != null){
+  if (pending != undefined){
     query.pending = pending;
   }
-  if (merchantName != null){
+  if (merchantName != undefined){
     query.merchant_name = merchantName;
   }
-  if (amountRangeStart != null && amountRangeEnd != null){
+  if (amountRangeStart != undefined && amountRangeEnd != undefined){
     query.amount = {$gte: amountRangeStart, $lte: amountRangeEnd};
   }
-  if (amountRangeStart != null){
+  if (amountRangeStart != undefined){
     query.amount = {$gte: amountRangeEnd};
   }
-  if (amountRangeEnd != null){
+  if (amountRangeEnd != undefined){
     query.amount = {$lte: amountRangeEnd};
   }
 
   try {
+
     const client = server.client;
     const appdata = client.db("appdata");
     const transactions = appdata.collection("transactions");
-    const result = await transactions.findMany(query);
-    return result;
+    const cursor = await transactions.find(query);
+
+  var result = 0;
+  for await (trans of cursor){
+    result += trans.amount;
+  }
+  return result;
+
   } catch (error) {
     console.error(
       `Looks like I'm encountering an error. ${JSON.stringify(error)}`
