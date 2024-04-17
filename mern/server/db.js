@@ -478,13 +478,13 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
     query.personal_finance_category = personalFinanceCategory;
   }
   if (dateRangeStart != undefined && dateRangeEnd != undefined){
-    query.date = {$gte: ISODate(dateRangeStart), $lte: ISODate(dateRangeEnd)};
+    query.date = {$gte: new Date(dateRangeStart), $lte: new Date(dateRangeEnd)};
   }
   if (dateRangeStart != undefined){
-    query.date = {$gte: ISODate(dateRangeStart)};
+    query.date = {$gte: new Date(dateRangeStart)};
   }
   if (dateRangeEnd != undefined){
-    query.date = {$lte: ISODate(dateRangeEnd)};
+    query.date = {$lte: new Date(dateRangeEnd)};
   }
   if (pending != undefined){
     query.pending = pending;
@@ -516,7 +516,7 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
       }
       return result;
     } else {
-      return cursor;
+      return cursor.toArray();
     }
 
   } catch (error) {

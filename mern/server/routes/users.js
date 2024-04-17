@@ -18,7 +18,7 @@ router.post("/register", async (req, res, next) => {
     const username = req.body.username;
     const userId = uuidv4();
 
-    const result = await db.addUser(userId, email, password, username);
+    const result = await db.addUser(userId, email, password, username)
 
     console.log(`User registration result is ${JSON.stringify(result)}`);
     if (result["acknowledged"] == true) {
@@ -144,12 +144,7 @@ router.get("/agg_data", async (req, res, next) => {
     }
 
     const result = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd, sum);
-
-    if (sum) {
-      res.json(result);
-    } else {
-      res.json({ agg_data: result });
-    }
+    res.json(result);
   } catch (error) {
     next(error);
   }

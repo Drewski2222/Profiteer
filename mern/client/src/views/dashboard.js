@@ -13,10 +13,12 @@ const Dashboard = (props) => {
     axios.get('http://localhost:5000/server/users/agg_data', 
     {
       params: {
-        personalFinanceCategory: 'GENERAL_MERCHANDISE',
+        //personalFinanceCategory: 'GENERAL_MERCHANDISE',
+        dateRangeStart: '2024-03-01',
+        dateRangeEnd: '2024-04-01',
       }
     }).then((response) => {
-      values[0] = (response.data.agg_data)
+      values[0] = (response.data)
     })
 
     axios.get('http://localhost:5000/server/users/agg_data', 
@@ -25,7 +27,7 @@ const Dashboard = (props) => {
         personalFinanceCategory: 'GROCERIES',
       }
     }).then((response) => {
-      values[1] = (response.data.agg_data)
+      values[1] = (response.data)
     })
 
     axios.get('http://localhost:5000/server/users/agg_data', 
@@ -34,7 +36,7 @@ const Dashboard = (props) => {
         personalFinanceCategory: 'UTILITIES',
       }
     }).then((response) => {
-      values[2] = (response.data.agg_data)
+      values[2] = (response.data)
     })
     .catch((error) => {
       console.log(error);
