@@ -469,7 +469,7 @@ const saveCursorForItem = async function (transactionCursor, itemId) {
  * @param {string} amountRangeStart
  * @param {string} amountRangeEnd
  */
-const aggregateTransactions = async function (userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd) {
+const aggregateTransactions = async function (userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd, sum) {
   query = {
     user_id: userId,
   }
@@ -509,11 +509,15 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
     const transactions = appdata.collection("transactions");
     const cursor = await transactions.find(query);
 
-  var result = 0;
-  for await (trans of cursor){
-    result += trans.amount;
-  }
-  return result;
+    if (sum) {
+      var result = 0;
+      for await (trans of cursor){
+        result += trans.amount;
+      }
+      return result;
+    } else {
+      return cursor;
+    }
 
   } catch (error) {
     console.error(

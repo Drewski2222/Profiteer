@@ -136,9 +136,20 @@ router.get("/agg_data", async (req, res, next) => {
     const amountRangeStart = req.query.amountRangeStart;
     const amountRangeEnd = req.query.amountRangeEnd;
 
-    const result = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd);
+    var sum;
+    if (req.query.sum == undefined) {
+      sum = true;
+    } else {
+      sum = req.query.sum;
+    }
 
-    res.json({ agg_data: result });
+    const result = await db.aggregateTransactions(userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd, sum);
+
+    if (sum) {
+      res.json(result);
+    } else {
+      res.json({ agg_data: result });
+    }
   } catch (error) {
     next(error);
   }
