@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useEffect } from 'react'
-import renderDonutChart from '../components/charts'
+import {renderDonutChart, renderLineChart} from '../components/charts'
 import './dashboard.css'
 import axios from 'axios'
 
@@ -47,9 +47,20 @@ const Dashboard = (props) => {
       { label: "Utilities", value: values[2] }
     ];
 
+    //test data for the line chart
+    const data2 = [
+      { date: "2024-01-01", value: 10 },
+      { date: "2024-02-01", value: 20 },
+      { date: "2024-03-01", value: 15 },
+      { date: "2024-04-01", value: 25 },
+      { date: "2024-05-01", value: 18 },
+      { date: "2024-06-01", value: 30 }
+    ]
+
     // Call the render function
     if (!window.chartRendered) {
       renderDonutChart(data, '.dashboard-dashboard-left');
+      renderLineChart(data2, '.dashboard-right-top');
       window.chartRendered = true;
     }
   }, []);
