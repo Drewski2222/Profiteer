@@ -124,6 +124,32 @@ export const renderLineChart = (data, containerSelector) => {
         .attr("stroke-width", 2)
         .attr("d", line);
 
+    // Append circles for data points
+    svg.selectAll("circle")
+        .data(data)
+        .enter().append("circle")
+        .attr("cx", d => x(d.date))
+        .attr("cy", d => y(d.value))
+        .attr("r", 8)
+        .style("fill", "steelblue")
+        .style("opacity", 0)
+        .on("mouseover", function(event, d) {
+            d3.select(this).transition().duration(200).style("opacity", 1);
+            const [xCoord, yCoord] = d3.pointer(event);
+            if (d && d.date && d.value) {
+                tooltip.style("opacity", 1)
+                       .html(`Date: ${d.date.toLocaleDateString()}<br>Value: ${d.value}`)
+                       .style("left", (xCoord + 10) + "px")
+                       .style("top", (yCoord - 20) + "px");
+            }
+        })
+        .on("mouseout", function() {
+            const circle = d3.select(this);
+            circle.transition().duration(200).style("opacity", 0);
+            setTimeout(() => {
+            }, 300); // Delay hiding the tooltip
+        });
+        
     // Append x-axis
     svg.append("g")
         .attr("transform", `translate(0, ${innerHeight})`)
@@ -132,4 +158,21 @@ export const renderLineChart = (data, containerSelector) => {
     // Append y-axis
     svg.append("g")
         .call(d3.axisLeft(y));
+
+    // Append tooltip
+    const tooltip = d3.select(containerSelector)
+        .append("div")
+        .style("position", "absolute")
+        .style("z-index", "10")
+        .style("opacity", 0)
+        .style("background-color", "white")
+        .style("border", "1px solid #ddd")
+        .style("padding", "5px")
+        .style("border-radius", "5px")
+        .on("mouseover", function() {
+            tooltip.transition().duration(200).style("opacity", 1);
+        })
+        .on("mouseout", function() {
+            tooltip.transition().duration(200).style("opacity", 0);
+        });
 };

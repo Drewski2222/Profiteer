@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useEffect } from 'react'
@@ -8,6 +8,8 @@ import axios from 'axios'
 
 
 const Dashboard = (props) => {
+  const [activeTab, setActiveTab] = useState('weekly');
+  const [chartData, setChartData] = useState([]);
   useEffect(() => {
     let values = [1, 1, 1];
     axios.get('http://localhost:5000/server/users/agg_data', 
@@ -50,7 +52,7 @@ const Dashboard = (props) => {
     ];
 
     //test data for the line chart
-    const data2 = [
+    const weeklyData = [
       { date: "2024-01-01", value: 10 },
       { date: "2024-02-01", value: 20 },
       { date: "2024-03-01", value: 15 },
@@ -59,10 +61,46 @@ const Dashboard = (props) => {
       { date: "2024-06-01", value: 30 }
     ]
 
+    const monthlyData = [
+      { date: "2024-01-01", value: 63 },
+      { date: "2024-02-01", value: 20 },
+      { date: "2024-03-01", value: 42 },
+      { date: "2024-04-01", value: 55 },
+      { date: "2024-05-01", value: 23 },
+      { date: "2024-06-01", value: 50 }
+    ]
+
+    const yearlyData = [
+      { date: "2024-01-01", value: 34 },
+      { date: "2024-02-01", value: 20 },
+      { date: "2024-03-01", value: 65 },
+      { date: "2024-04-01", value: 55 },
+      { date: "2024-05-01", value: 72 },
+      { date: "2024-06-01", value: 21 }
+    ]
+
+    const handleTabChange = (tab) => {
+      setActiveTab(tab);
+      switch (tab) {
+        case 'weekly':
+          setChartData(weeklyData);
+          break;
+        case 'monthly':
+          setChartData(monthlyData);
+          break;
+        case 'yearly':
+          setChartData(yearlyData);
+          break;
+        default:
+          break;
+      }
+    };
+
+
     // Call the render function
     if (!window.chartRendered) {
-      renderDonutChart(data, '.dashboard-dashboard-left');
-      renderLineChart(data2, '.dashboard-right-top');
+      renderDonutChart(data, '.dashboard-right-top');
+      renderLineChart(weeklyData, '.dashboard-dashboard-left');
       window.chartRendered = true;
     }
   }, []);
@@ -122,17 +160,6 @@ const Dashboard = (props) => {
                       </svg>
                     </div>
                   </div>
-                  <nav
-                    data-thq="thq-mobile-menu-nav-links"
-                    data-role="Nav"
-                    className="dashboard-nav2"
-                  >
-                    <span className="navLink dashboard-text3">About</span>
-                    <span className="navLink dashboard-text4">Features</span>
-                    <span className="navLink dashboard-text5">Pricing</span>
-                    <span className="navLink dashboard-text6">Team</span>
-                    <span className="navLink dashboard-text7">Blog</span>
-                  </nav>
                   <div className="dashboard-button-container">
                     <button className="dashboard-login button">Login</button>
                     <button className="button dashboard-register">
@@ -169,7 +196,8 @@ const Dashboard = (props) => {
                 />
               </div>
             </header>
-            <div className="dashboard-dashboard-left"></div>
+            <div className="dashboard-dashboard-left">
+            </div>
             <div className="dashboard-dashboard-right">
               <div className="dashboard-container3">
                 <div className="dashboard-right-bottom"></div>
