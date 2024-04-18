@@ -7,6 +7,65 @@ import './dashboard.css'
 import axios from 'axios'
 
 
+const fetchData = async () => {
+  let dailyTransactions = [];
+  let transactionsData = [];
+  let rangeIncome = 0;
+  try {
+    // Generate date range for one month
+    let currentDate = new Date();
+    const endDate = currentDate.toISOString().split('T')[0]; // Current date
+    currentDate.setDate(currentDate.getDate() - 30); // Set start date to one month ago
+    const startDate = currentDate.toISOString().split('T')[0];
+
+    // Fetch transactions data
+    const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
+      params: {
+        dateRangeStart: startDate,
+        dateRangeEnd: endDate,
+        sum: false
+      }
+    })
+    transactionsData = transactionsResponse.data;
+    console.log(transactionsData) 
+    // Process transactions data
+    for (let i = 0; i < 30; i++) {
+      let currentDateStr = currentDate.toISOString().split('T')[0];
+      console.log(currentDateStr)
+      let dailyIncome = 0;
+
+      // Filter transactions for the current date
+      const transactionsForDay = transactionsData.filter(transaction => {
+        const transactionDate = transaction.date.split('T')[0];
+        return transactionDate === currentDateStr;
+      });
+
+      // Calculate daily net income
+      for (const transaction of transactionsForDay) {
+        dailyIncome += transaction.amount;
+      }
+
+      // Update range income
+      rangeIncome += dailyIncome;
+
+      // Store the result in the format { date: 'YYYY-MM-DD', value: net_income }
+      dailyTransactions.push({ date: currentDateStr , value: -(rangeIncome) });
+      
+      // Move to the next day
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    console.log(dailyTransactions);
+    return dailyTransactions;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
+
+let allTransactions = [];
+allTransactions = await fetchData();
+console.log(allTransactions);
+
 const Dashboard = (props) => {
   const [activeTab, setActiveTab] = useState('weekly');
   const [chartData, setChartData] = useState([]);
@@ -78,7 +137,8 @@ const Dashboard = (props) => {
       { date: "2024-03-01", value: 65 },
       { date: "2024-04-01", value: 55 },
       { date: "2024-05-01", value: 72 },
-      { date: "2024-06-01", value: 21 }
+      { date: "2024-06-01", value: 21 },
+      { date: "2024-06-01", value: 60}
     ]
 
     const handleTabChange = (tab) => {
@@ -102,7 +162,9 @@ const Dashboard = (props) => {
     // Call the render function
     if (!window.chartRendered) {
       renderDonutChart(data, '.dashboard-right-top');
-      renderLineChart(weeklyData, '.dashboard-dashboard-left');
+      console.log(allTransactions)
+      console.log(yearlyData)
+      renderLineChart(allTransactions, '.dashboard-right-bottom');
       window.chartRendered = true;
     }
   }, []);
