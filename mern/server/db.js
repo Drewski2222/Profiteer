@@ -509,14 +509,19 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
     const transactions = appdata.collection("transactions");
     const cursor = await transactions.find(query);
 
-    if (sum) {
+
+    if (sum == true) {
       var result = 0;
       for await (trans of cursor){
         result += trans.amount;
       }
       return result;
     } else {
-      return cursor.toArray();
+      var result = [];
+      for await (trans of cursor){
+        result.push(trans);
+      }
+      return result;
     }
 
   } catch (error) {

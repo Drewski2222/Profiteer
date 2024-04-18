@@ -18,8 +18,10 @@ const Dashboard = (props) => {
         //personalFinanceCategory: 'GENERAL_MERCHANDISE',
         dateRangeStart: '2024-03-01',
         dateRangeEnd: '2024-04-01',
+        sum: false,
       }
     }).then((response) => {
+      console.log(response);
       values[0] = (response.data)
     })
 
