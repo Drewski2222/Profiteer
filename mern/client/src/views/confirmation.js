@@ -8,18 +8,140 @@ import { bool } from 'prop-types';
 
 const Confirmation = (props) => {
   // connect.js functionns
-  const initializeLink = async function () {}
-  const startLink = function() {}
-  async function exchangeToken(publicToken) {}
+  const initializeLink = async function () {
+    const linkTokenResponse = await fetch(`/server/token/generate_link_token`);
+    linkTokenData = await linkTokenResponse.json();
+    localStorage.setItem("linkTokenData", JSON.stringify(linkTokenData));
+    
+    // make button lighter when clicked
+
+    console.log(JSON.stringify(linkTokenData));
+  }
+
+  const startLink = function() {
+    if (linkTokenData === undefined) {
+      return;
+    }
+    const handler = Plaid.create({
+      token: linkTokenData.link_token,
+      onSuccess: async (publicToken, metadata) => {
+        console.log(
+          `I have a public token: ${publicToken} I should exchange this`
+        );
+        await exchangeToken(publicToken);
+      },
+      onExit: (err, metadata) => {
+        console.log(
+          `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
+            metadata
+          )}`
+        );
+      },
+      onEvent: (eventName, metadata) => {
+        console.log(`Event ${eventName}`);
+      },
+    });
+    handler.open();
+  }
+
+
+
+  async function exchangeToken(publicToken) {
+    const tokenExchangeResponse = await fetch('/server/token/exchange_public_token', {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ public_token: publicToken }),
+    });
+    const tokenExchangeData = await tokenExchangeResponse.json();
+
+    // figure this out
+    // window.location.href = "index.html";
+  }
 
   // index.js functions
-  const checkConnectedStatus = async function () {}
-  const showInstitutionName = async function() {}
-  const getTransactions = async function() {}
+  const checkConnectedStatus = async function () {
+    try {
+      const connectResponse = await fetch('/server/token/is_user_connected');
+      const connectedData = await connectedResponse.json();
+      console.log(JSON.stringify(connectedData));
+      if (connectedData.status === true) {
+        // set connected stuff in html
+        showInstitutionName();
+      }
+      else {
+        // set disconnected stuff in html
+      }
+    }
+    catch (error) {
+      console.error('We encountered an error: ${error}');
+    }
+  };
+
+  const showInstitutionName = async function() {
+    const bankData = await fetch("/server/token/get_bank_name");
+    const bankJSON = await bankData.json();
+    console.log(JSON.stringify(bankJSON));
+    // set html stuff
+  };
+
+  const getTransactions = async function() {
+    const transactionResponse = await fetch('server/token/transactions');
+    const transactionData = await transactionResponse.json();
+    const simplifiedData = transactionData.transactions.map((item) => {
+      return {
+        date: item.date,
+        name: item.name,
+        amount: '$${item.amount.toFixed(2)}',
+        categories: item.category.join(", "),
+      };
+    });
+    console.table(simplifiedData);
+    // html stuff
+  }
 
   // oauth-return.js functions
-  function finishOAuth() {}
-  async function exchangeToken(publicToken) {}
+  function finishOAuth() {
+    const storedTokenData = localStorage.getItem("linkTokenData");
+    console.log(`I retrieved ${storedTokenData} from local storage`);
+    const linkTokenData = JSON.parse(storedTokenData);
+
+    const handler = Plaid.create({
+      token: linkTokenData.link_token,
+      receivedRedirectUri: window.location.href,
+      onSuccess: async (publicToken, metadata) => {
+        console.log(
+          `I have a public token: ${publicToken} I should exchange this`
+        );
+        await exchangeToken(publicToken);
+      },
+      onExit: (err, metadata) => {
+        console.log(
+          `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
+            metadata
+          )}`
+        );
+        if (err !== null) {
+          // html stuff
+        }
+      },
+      onEvent: (eventName, metadata) => {
+        console.log(`Event ${eventName}`);
+      },
+    });
+    handler.open();
+  }
+  async function exchangeToken(publicToken) {
+    const tokenExchangeResponse = await fetch(`/api/exchange_public_token`, {
+      method: "POST",
+      headers: { "Content-type": "application/json" },
+      body: JSON.stringify({ public_token: publicToken }),
+    });
+    // This is where I'd add our error checking... if our server returned any
+    // errors.
+    const tokenExchangeData = await tokenExchangeResponse.json();
+    console.log("Done exchanging our token");
+    window.location.href = "index.html";
+  }
   
 
   return (
