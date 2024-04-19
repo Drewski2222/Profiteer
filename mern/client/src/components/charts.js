@@ -77,7 +77,7 @@ export const renderDonutChart = (data, containerSelector) => {
 
 export const renderLineChart = (data, containerSelector) => {
     // Set up the dimensions
-    const width = 400;
+    const width = 600;
     const height = 300;
     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
     const innerWidth = width - margin.left - margin.right;
@@ -151,9 +151,17 @@ export const renderLineChart = (data, containerSelector) => {
         });
         
     // Append x-axis
-    svg.append("g")
+    /*svg.append("g")
         .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x));*/
+        
+    // X-axis for 30 days (one tick every 4 days)
+    svg.append("g")
+    .attr("transform", `translate(0, ${innerHeight})`)
+    .call(d3.axisBottom(x)
+        .ticks(d3.timeDay.every(4))
+        .tickFormat(d3.timeFormat("%b %d")) 
+    );
 
     // Append y-axis
     svg.append("g")
