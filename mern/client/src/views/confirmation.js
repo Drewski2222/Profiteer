@@ -4,72 +4,23 @@ import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 
 import './confirmation.css'
+import { bool } from 'prop-types';
 
 const Confirmation = (props) => {
-  // Plaid API used below
-  let linkTokenData;
+  // connect.js functionns
+  const initializeLink = async function () {}
+  const startLink = function() {}
+  async function exchangeToken(publicToken) {}
 
-  // TO DO: GET THE BUTTON TO CALL THESE FUNCTION!!!!!!!!!!!!
-  const helloWorld = function() {
-    console.log("Sup?");
-  }
+  // index.js functions
+  const checkConnectedStatus = async function () {}
+  const showInstitutionName = async function() {}
+  const getTransactions = async function() {}
 
-  const initializeLink = async function () {
-    console.log("Sup?");
-    const linkTokenResponse = await fetch(`/api/create_link_token`);
-    linkTokenData = await linkTokenResponse.json();
-    localStorage.setItem("linkTokenData", JSON.stringify(linkTokenData));
-    document.querySelector("#startLink").classList.remove("opacity-50");
-    console.log(JSON.stringify(linkTokenData));
-  };
+  // oauth-return.js functions
+  function finishOAuth() {}
+  async function exchangeToken(publicToken) {}
   
-  const startLink = function () {
-    if (linkTokenData === undefined) {
-      return;
-    }
-    const handler = Plaid.create({
-      token: linkTokenData.link_token,
-      onSuccess: async (publicToken, metadata) => {
-        console.log(
-          `I have a public token: ${publicToken} I should exchange this`
-        );
-        await exchangeToken(publicToken);
-      },
-      onExit: (err, metadata) => {
-        console.log(
-          `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
-            metadata
-          )}`
-        );
-      },
-      onEvent: (eventName, metadata) => {
-        console.log(`Event ${eventName}`);
-      },
-    });
-    handler.open();
-  };
-  
-  async function exchangeToken(publicToken) {
-    const tokenExchangeResponse = await fetch(`/api/exchange_public_token`, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ public_token: publicToken }),
-    });
-    // This is where I'd add our error checking... if our server returned any
-    // errors.
-    console.log("trying to exchange token");
-    const tokenExchangeData = await tokenExchangeResponse.json();
-    console.log("Done exchanging our token");
-
-    // TO DO: ADD LINK TO DASHBOARD WITH PLAID CONNECTION CONFIRMATION
-    //window.location.href = "index.html";
-    history.pushState('/dashboard');
-  }
-  
-  // document.querySelector("#startLink").addEventListener("click", startLink);
-  
-  initializeLink();
-
 
   return (
     <div className="confirmation-container">
@@ -96,7 +47,7 @@ const Confirmation = (props) => {
               <button
                 type="submit"
                 className="confirmation-register button"
-                onClick={helloWorld}
+                onClick={Confirmation}
               >
                 <span className="confirmation-text05">Connect to Plaid</span>
               </button>
