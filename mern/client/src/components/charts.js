@@ -76,6 +76,9 @@ export const renderDonutChart = (data, containerSelector) => {
 };
 
 export const renderLineChart = (data, range, containerSelector) => {
+    // Remove any existing SVG elements
+    d3.select(containerSelector).selectAll('*').remove();
+
     // Set up the dimensions
     const width = 635;
     const height = 261;
@@ -85,11 +88,11 @@ export const renderLineChart = (data, range, containerSelector) => {
 
     // Parse the date/time data
     const parseTime = d3.timeParse("%Y-%m-%d");
-    
+
     // Set up scales
     const x = d3.scaleTime()
         .range([0, innerWidth]);
-    
+
     const y = d3.scaleLinear()
         .range([innerHeight, 0]);
 
@@ -97,14 +100,6 @@ export const renderLineChart = (data, range, containerSelector) => {
     const line = d3.line()
         .x(d => x(d.date))
         .y(d => y(d.value));
-
-    // Create SVG element
-    const svg = d3.select(containerSelector)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Convert data to proper format
     data.forEach(d => {
@@ -115,6 +110,14 @@ export const renderLineChart = (data, range, containerSelector) => {
     // Set domains
     x.domain(d3.extent(data, d => d.date));
     y.domain([0, d3.max(data, d => d.value)]);
+
+    // Create SVG element
+    const svg = d3.select(containerSelector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
 
     // Append path
     svg.append("path")
@@ -133,80 +136,50 @@ export const renderLineChart = (data, range, containerSelector) => {
         .attr("r", 8)
         .style("fill", "steelblue")
         .style("opacity", 0)
-        .on("mouseover", function(event, d) {
+        .on("mouseover", function (event, d) {
             d3.select(this).transition().duration(200).style("opacity", 1);
             const [xCoord, yCoord] = d3.pointer(event);
             if (d && d.date && d.value) {
                 tooltip.style("opacity", 1)
-                       .html(`Date: ${d.date.toLocaleDateString()}<br>Value: ${d.value}`)
-                       .style("left", (xCoord + 10) + "px")
-                       .style("top", (yCoord - 20) + "px");
+                    .html(`Date: ${d.date.toLocaleDateString()}<br>Value: ${d.value}`)
+                    .style("left", (xCoord + 10) + "px")
+                    .style("top", (yCoord - 20) + "px");
             }
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             const circle = d3.select(this);
             circle.transition().duration(200).style("opacity", 0);
             setTimeout(() => {
             }, 300); // Delay hiding the tooltip
         });
-        
+
     // Append x-axis
-    /*svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x));*/
-    
-    // X-axis for 7 days
-    if (range == 7){
-        svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x)
+    let xAxis;
+    if (range === 7) {
+        xAxis = d3.axisBottom(x)
             .ticks(d3.timeDay.every(1))
-            .tickFormat(d3.timeFormat("%b %d")) 
-        );
-    }
-
-    // X-axis for 30 days (one tick every 4 days)
-    if (range == 30){
-        svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%b %d"));
+    } else if (range === 30) {
+        xAxis = d3.axisBottom(x)
             .ticks(d3.timeDay.every(4))
-            .tickFormat(d3.timeFormat("%b %d")) 
-        );
-    }
-
-
-    // X-axis for 90 days
-    if (range == 90) {
-        svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%b %d"));
+    } else if (range === 90) {
+        xAxis = d3.axisBottom(x)
             .ticks(d3.timeDay.every(20))
-            .tickFormat(d3.timeFormat("%b %d")) 
-        );
-    }
-
-
-    // X-axis for 180 days
-    if (range == 180){
-        svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%b %d"));
+    } else if (range === 180) {
+        xAxis = d3.axisBottom(x)
             .ticks(d3.timeDay.every(40))
-            .tickFormat(d3.timeFormat("%b %d")) 
-        );  
-    }
-
-
-    // X-axis for 365 days
-    if (range == 365) {
-        svg.append("g")
-        .attr("transform", `translate(0, ${innerHeight})`)
-        .call(d3.axisBottom(x)
+            .tickFormat(d3.timeFormat("%b %d"));
+    } else if (range === 365) {
+        xAxis = d3.axisBottom(x)
             .ticks(d3.timeDay.every(60))
-            .tickFormat(d3.timeFormat("%b %d")) 
-        );
+            .tickFormat(d3.timeFormat("%b %d"));
     }
+
+    svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(xAxis);
 
     // Append y-axis
     svg.append("g")
@@ -222,10 +195,10 @@ export const renderLineChart = (data, range, containerSelector) => {
         .style("border", "1px solid #ddd")
         .style("padding", "5px")
         .style("border-radius", "5px")
-        .on("mouseover", function() {
+        .on("mouseover", function () {
             tooltip.transition().duration(200).style("opacity", 1);
         })
-        .on("mouseout", function() {
+        .on("mouseout", function () {
             tooltip.transition().duration(200).style("opacity", 0);
         });
 };
