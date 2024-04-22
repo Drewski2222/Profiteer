@@ -75,10 +75,10 @@ export const renderDonutChart = (data, containerSelector) => {
         .style("fill", "black");
 };
 
-export const renderLineChart = (data, containerSelector) => {
+export const renderLineChart = (data, range, containerSelector) => {
     // Set up the dimensions
-    const width = 600;
-    const height = 300;
+    const width = 635;
+    const height = 261;
     const margin = { top: 20, right: 20, bottom: 30, left: 50 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
@@ -154,14 +154,59 @@ export const renderLineChart = (data, containerSelector) => {
     /*svg.append("g")
         .attr("transform", `translate(0, ${innerHeight})`)
         .call(d3.axisBottom(x));*/
-        
+    
+    // X-axis for 7 days
+    if (range == 7){
+        svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(1))
+            .tickFormat(d3.timeFormat("%b %d")) 
+        );
+    }
+
     // X-axis for 30 days (one tick every 4 days)
-    svg.append("g")
-    .attr("transform", `translate(0, ${innerHeight})`)
-    .call(d3.axisBottom(x)
-        .ticks(d3.timeDay.every(4))
-        .tickFormat(d3.timeFormat("%b %d")) 
-    );
+    if (range == 30){
+        svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(4))
+            .tickFormat(d3.timeFormat("%b %d")) 
+        );
+    }
+
+
+    // X-axis for 90 days
+    if (range == 90) {
+        svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(20))
+            .tickFormat(d3.timeFormat("%b %d")) 
+        );
+    }
+
+
+    // X-axis for 180 days
+    if (range == 180){
+        svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(40))
+            .tickFormat(d3.timeFormat("%b %d")) 
+        );  
+    }
+
+
+    // X-axis for 365 days
+    if (range == 365) {
+        svg.append("g")
+        .attr("transform", `translate(0, ${innerHeight})`)
+        .call(d3.axisBottom(x)
+            .ticks(d3.timeDay.every(60))
+            .tickFormat(d3.timeFormat("%b %d")) 
+        );
+    }
 
     // Append y-axis
     svg.append("g")

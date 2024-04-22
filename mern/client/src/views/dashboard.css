@@ -1,309 +1,338 @@
 .dashboard-container {
-    width: 100%;
-    display: flex;
-    overflow: auto;
-    min-height: 100vh;
-    align-items: center;
-    flex-direction: column;
-  }
-  .dashboard-container1 {
-    flex: 0 0 auto;
-    width: auto;
-    height: auto;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .dashboard-background {
-    flex: 0 0 auto;
-    width: 1920px;
-    height: 1080px;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .dashboard-background1 {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    position: relative;
-    align-items: center;
-    background-size: cover;
-    justify-content: center;
-    background-image: url('https://www.xtrafondos.com/wallpapers/resoluciones/21/montanas-minimalista-degradado-azul_2560x1440_7869.jpg');
-    background-position: center;
-  }
-  .dashboard-navbar {
-    top: 33px;
-    left: 0px;
-    right: 0px;
-    width: 100%;
-    margin: auto;
-    display: flex;
-    z-index: 1000;
-    position: absolute;
-    max-width: var(--dl-size-size-maxwidth);
-    align-self: center;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .dashboard-navlink {
-    display: contents;
-  }
-  .dashboard-text {
-    color: #37447E;
-    text-decoration: none;
-  }
+  width: 100%;
+  display: flex;
+  overflow: auto;
+  min-height: 100vh;
+  align-items: center;
+  flex-direction: column;
+}
+.dashboard-container1 {
+  flex: 0 0 auto;
+  width: auto;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-background {
+  flex: 0 0 auto;
+  width: 1920px;
+  height: 1080px;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-background1 {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  background-size: cover;
+  justify-content: center;
+  background-image: url('https://www.xtrafondos.com/wallpapers/resoluciones/21/montanas-minimalista-degradado-azul_2560x1440_7869.jpg');
+  background-position: center;
+}
+.dashboard-navbar {
+  top: 33px;
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  margin: auto;
+  display: flex;
+  z-index: 1000;
+  position: absolute;
+  max-width: var(--dl-size-size-maxwidth);
+  align-self: center;
+  align-items: center;
+  justify-content: space-between;
+}
+.dashboard-navlink {
+  display: contents;
+}
+.dashboard-text {
+  color: #37447E;
+  text-decoration: none;
+}
+.dashboard-desktop-menu {
+  gap: var(--dl-space-space-threeunits);
+  display: flex;
+}
+.dashboard-nav {
+  gap: var(--dl-space-space-oneandhalfunits);
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+.dashboard-notificationicon {
+  width: 48px;
+  height: 45px;
+  object-fit: cover;
+}
+.dashboard-logoutbutton {
+  width: 125px;
+  height: 2px;
+  display: flex;
+  border-color: #111b47;
+  border-width: 2px;
+  text-decoration: none;
+  background-color: transparent;
+}
+.dashboard-text1 {
+  color: rgb(17, 27, 71);
+}
+.dashboard-burger-menu {
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-icon {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+.dashboard-mobile-menu {
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  padding: 32px;
+  z-index: 100;
+  position: fixed;
+  transform: translateX(100%);
+  transition: 0.5s;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+}
+.dashboard-nav1 {
+  display: flex;
+  z-index: 20;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-container2 {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: var(--dl-space-space-threeunits);
+  justify-content: space-between;
+}
+.dashboard-text2 {
+  color: rgb(255, 255, 255);
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 45px;
+}
+.dashboard-menu-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-icon02 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+.dashboard-nav2 {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-button-container {
+  flex: 0 0 auto;
+  width: auto;
+  display: flex;
+  margin-top: var(--dl-space-space-unit);
+  align-items: center;
+  flex-direction: row;
+}
+.dashboard-login {
+  margin-right: var(--dl-space-space-twounits);
+}
+.dashboard-icon-group {
+  display: flex;
+  z-index: 20;
+}
+.dashboard-icons {
+  display: flex;
+}
+.dashboard-icon04 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+  margin-right: var(--dl-space-space-twounits);
+}
+.dashboard-icon06 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+  margin-right: var(--dl-space-space-twounits);
+}
+.dashboard-icon08 {
+  width: var(--dl-size-size-xsmall);
+  height: var(--dl-size-size-xsmall);
+}
+.dashboard-background2 {
+  left: 0px;
+  right: 0px;
+  width: 100%;
+  bottom: 0px;
+  height: 80%;
+  margin: auto;
+  position: absolute;
+  object-fit: cover;
+}
+.dashboard-dashboard-left {
+  top: 235px;
+  flex: 0 0 auto;
+  left: 163px;
+  width: 635px;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 632px;
+  display: flex;
+  position: absolute;
+  align-self: flex-start;
+  align-items: flex-start;
+}
+.dashboard-dashboard-right {
+  top: 180px;
+  flex: 0 0 auto;
+  right: 163px;
+  width: 635px;
+  height: 758px;
+  display: flex;
+  position: absolute;
+  align-self: flex-start;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-container3 {
+  flex: 0 0 auto;
+  display: flex;
+  position: relative;
+  align-items: flex-start;
+  flex-direction: column;
+}
+.dashboard-right-bottom {
+  flex: 0 0 auto;
+  left: 0px;
+  width: 635px;
+  bottom: -440.5px;
+  height: 317.5px;
+  margin: auto;
+  display: flex;
+  position: absolute;
+  align-items: center;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+.dashboard-line-graph-container {
+  width: 100%;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 261px;
+  display: flex;
+  align-items: flex-start;
+}
+.dashboard-right-bottom-buttons {
+  gap: 10px;
+  width: 100%;
+  height: 69px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-week-button {
+  background-color: #32af12;
+}
+.dashboard-one-month-button {
+  background-color: #32AF12;
+}
+.dashboard-three-months-button {
+  background-color: #32AF12;
+}
+.dashboard-six-months-button {
+  background-color: #32AF12;
+}
+.dashboard-one-year-button {
+  background-color: #32AF12;
+}
+.dashboard-right-top {
+  flex: 0 0 auto;
+  width: 635px;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 317.5px;
+  display: flex;
+  align-self: center;
+  align-items: flex-start;
+  flex-direction: column;
+}
+@media(max-width: 767px) {
   .dashboard-desktop-menu {
-    gap: var(--dl-space-space-threeunits);
-    display: flex;
-  }
-  .dashboard-nav {
-    gap: var(--dl-space-space-oneandhalfunits);
-    flex: 0 0 auto;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-  }
-  .dashboard-notificationicon {
-    width: 48px;
-    height: 45px;
-    object-fit: cover;
-  }
-  .dashboard-logoutbutton {
-    width: 125px;
-    height: 2px;
-    display: flex;
-    border-color: #111b47;
-    border-width: 2px;
-    text-decoration: none;
-    background-color: transparent;
-  }
-  .dashboard-text1 {
-    color: rgb(17, 27, 71);
+    display: none;
   }
   .dashboard-burger-menu {
-    display: none;
-    align-items: center;
-    justify-content: center;
+    display: flex;
   }
   .dashboard-icon {
-    width: var(--dl-size-size-xsmall);
-    height: var(--dl-size-size-xsmall);
-  }
-  .dashboard-mobile-menu {
-    top: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    padding: 32px;
-    z-index: 100;
-    position: fixed;
-    transform: translateX(100%);
-    transition: 0.5s;
-    flex-direction: column;
-    justify-content: space-between;
-    background-color: #ffffff;
+    fill: white;
   }
   .dashboard-nav1 {
-    display: flex;
-    z-index: 20;
-    align-items: flex-start;
-    flex-direction: column;
+    gap: var(--dl-space-space-oneandhalfunits);
   }
   .dashboard-container2 {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    margin-bottom: var(--dl-space-space-threeunits);
-    justify-content: space-between;
+    margin-bottom: var(--dl-space-space-unit);
   }
   .dashboard-text2 {
-    color: rgb(255, 255, 255);
-    font-size: 32px;
-    font-style: normal;
-    font-weight: 600;
-    line-height: 45px;
-  }
-  .dashboard-menu-close {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .dashboard-icon02 {
-    width: var(--dl-size-size-xsmall);
-    height: var(--dl-size-size-xsmall);
+    color: #000000;
   }
   .dashboard-nav2 {
-    flex: 0 0 auto;
-    display: flex;
-    align-items: flex-start;
-    flex-direction: column;
+    gap: var(--dl-space-space-unit);
+  }
+  .dashboard-text3 {
+    color: #000000;
+  }
+  .dashboard-text4 {
+    color: rgb(0, 0, 0);
+  }
+  .dashboard-text5 {
+    color: rgb(0, 0, 0);
+  }
+  .dashboard-text6 {
+    color: rgb(0, 0, 0);
+  }
+  .dashboard-text7 {
+    color: rgb(0, 0, 0);
   }
   .dashboard-button-container {
-    flex: 0 0 auto;
-    width: auto;
-    display: flex;
-    margin-top: var(--dl-space-space-unit);
-    align-items: center;
-    flex-direction: row;
+    gap: var(--dl-space-space-unit);
+    width: 50%;
+    margin-top: 0px;
+    align-items: flex-start;
+    flex-direction: column;
   }
   .dashboard-login {
-    margin-right: var(--dl-space-space-twounits);
+    width: 100%;
+    border-width: 1px;
+    margin-right: 0px;
+  }
+  .dashboard-register {
+    width: 100%;
+    border-width: 1px;
   }
   .dashboard-icon-group {
-    display: flex;
-    z-index: 20;
-  }
-  .dashboard-icons {
-    display: flex;
-  }
-  .dashboard-icon04 {
-    width: var(--dl-size-size-xsmall);
-    height: var(--dl-size-size-xsmall);
-    margin-right: var(--dl-space-space-twounits);
-  }
-  .dashboard-icon06 {
-    width: var(--dl-size-size-xsmall);
-    height: var(--dl-size-size-xsmall);
-    margin-right: var(--dl-space-space-twounits);
-  }
-  .dashboard-icon08 {
-    width: var(--dl-size-size-xsmall);
-    height: var(--dl-size-size-xsmall);
-  }
-  .dashboard-background2 {
-    left: 0px;
-    right: 0px;
     width: 100%;
-    bottom: 0px;
-    height: 80%;
-    margin: auto;
-    position: absolute;
-    object-fit: cover;
+    justify-content: flex-start;
   }
-  .dashboard-dashboard-left {
-    top: 235px;
-    flex: 0 0 auto;
-    left: 163px;
-    width: 635px;
-    border: 2px dashed rgba(120, 120, 120, 0.4);
-    height: 632px;
-    display: flex;
-    position: absolute;
-    align-self: flex-start;
-    align-items: flex-start;
+}
+@media(max-width: 479px) {
+  .dashboard-mobile-menu {
+    padding: 16px;
   }
-  .dashboard-dashboard-right {
-    top: 180px;
-    flex: 0 0 auto;
-    right: 163px;
-    width: 635px;
-    height: 758px;
-    display: flex;
-    position: absolute;
-    align-self: flex-start;
-    align-items: flex-start;
-    flex-direction: column;
+  .dashboard-button-container {
+    width: 100%;
   }
-  .dashboard-container3 {
-    flex: 0 0 auto;
-    display: flex;
-    position: relative;
-    align-items: flex-start;
-    flex-direction: column;
+  .dashboard-icon-group {
+    justify-content: center;
   }
-  .dashboard-right-bottom {
-    flex: 0 0 auto;
-    left: 0px;
-    width: 635px;
-    border: 2px dashed rgba(120, 120, 120, 0.4);
-    bottom: -440.5px;
-    height: 317.5px;
-    margin: auto;
-    display: flex;
-    position: absolute;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  .dashboard-right-top {
-    flex: 0 0 auto;
-    width: 635px;
-    border: 2px dashed rgba(120, 120, 120, 0.4);
-    height: 317.5px;
-    display: flex;
-    align-self: center;
-    align-items: flex-start;
-    flex-direction: column;
-  }
-  @media(max-width: 767px) {
-    .dashboard-desktop-menu {
-      display: none;
-    }
-    .dashboard-burger-menu {
-      display: flex;
-    }
-    .dashboard-icon {
-      fill: white;
-    }
-    .dashboard-nav1 {
-      gap: var(--dl-space-space-oneandhalfunits);
-    }
-    .dashboard-container2 {
-      margin-bottom: var(--dl-space-space-unit);
-    }
-    .dashboard-text2 {
-      color: #000000;
-    }
-    .dashboard-nav2 {
-      gap: var(--dl-space-space-unit);
-    }
-    .dashboard-text3 {
-      color: #000000;
-    }
-    .dashboard-text4 {
-      color: rgb(0, 0, 0);
-    }
-    .dashboard-text5 {
-      color: rgb(0, 0, 0);
-    }
-    .dashboard-text6 {
-      color: rgb(0, 0, 0);
-    }
-    .dashboard-text7 {
-      color: rgb(0, 0, 0);
-    }
-    .dashboard-button-container {
-      gap: var(--dl-space-space-unit);
-      width: 50%;
-      margin-top: 0px;
-      align-items: flex-start;
-      flex-direction: column;
-    }
-    .dashboard-login {
-      width: 100%;
-      border-width: 1px;
-      margin-right: 0px;
-    }
-    .dashboard-register {
-      width: 100%;
-      border-width: 1px;
-    }
-    .dashboard-icon-group {
-      width: 100%;
-      justify-content: flex-start;
-    }
-  }
-  @media(max-width: 479px) {
-    .dashboard-mobile-menu {
-      padding: 16px;
-    }
-    .dashboard-button-container {
-      width: 100%;
-    }
-    .dashboard-icon-group {
-      justify-content: center;
-    }
-  }
-  
+}

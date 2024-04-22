@@ -6,17 +6,17 @@ import {renderDonutChart, renderLineChart} from '../components/charts'
 import './dashboard.css'
 import axios from 'axios'
 
+let allTransactions = [];
 
-const fetchData = async () => {
+const fetchData = async (start, end) => {
   let dailyTransactions = [];
   let transactionsData = [];
   let rangeIncome = 0;
+
   try {
-    // Generate date range for one month
-    let currentDate = new Date();
-    const endDate = currentDate.toISOString().split('T')[0]; // Current date
-    currentDate.setDate(currentDate.getDate() - 30); // Set start date to one month ago
-    const startDate = currentDate.toISOString().split('T')[0];
+    // Convert start and end dates to ISO strings
+    const startDate = new Date(start).toISOString().split('T')[0];
+    const endDate = new Date(end).toISOString().split('T')[0];
 
     // Fetch transactions data
     const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
@@ -25,13 +25,18 @@ const fetchData = async () => {
         dateRangeEnd: endDate,
         sum: false
       }
-    })
+    });
     transactionsData = transactionsResponse.data;
-    console.log(transactionsData) 
+
+    // Calculate the number of days in the date range
+    const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+    const diffDays = Math.round(Math.abs((new Date(endDate) - new Date(startDate)) / oneDay));
+
     // Process transactions data
-    for (let i = 0; i < 30; i++) {
-      let currentDateStr = currentDate.toISOString().split('T')[0];
-      console.log(currentDateStr)
+    for (let i = 0; i <= diffDays; i++) {
+      let currentDateStr = new Date(start);
+      currentDateStr.setDate(currentDateStr.getDate() + i);
+      currentDateStr = currentDateStr.toISOString().split('T')[0];
       let dailyIncome = 0;
 
       // Filter transactions for the current date
@@ -49,10 +54,7 @@ const fetchData = async () => {
       rangeIncome += dailyIncome;
 
       // Store the result in the format { date: 'YYYY-MM-DD', value: net_income }
-      dailyTransactions.push({ date: currentDateStr , value: -(rangeIncome) });
-      
-      // Move to the next day
-      currentDate.setDate(currentDate.getDate() + 1);
+      dailyTransactions.push({ date: currentDateStr, value: -(rangeIncome) });
     }
 
     console.log(dailyTransactions);
@@ -60,16 +62,64 @@ const fetchData = async () => {
   } catch (error) {
     console.error('Error fetching data:', error);
   }
-}
+};
 
-let allTransactions = [];
-allTransactions = await fetchData();
-console.log(allTransactions);
-
+  // use 1 month data by default
+  let endDate = new Date(); // Current date
+  let startDate = new Date();
+  startDate.setDate(endDate.getDate() - 30); // 30 days ago
+  allTransactions = await fetchData(startDate, endDate);
+  console.log(allTransactions);
 const Dashboard = (props) => {
+  const [chartData, setChartData] = useState(allTransactions);
+  // set range to 1 week
+  const oneWeekRange = async () => {
+    startDate = new Date(endDate.getTime() - (7*24*60*60*1000)); // 7 days ago
+    const data = await fetchData(startDate, endDate);
+    console.log(startDate)
+    setChartData(data); // Update state with fetched data
+    renderLineChart(data, 7, '.dashboard-line-graph-container');
+  };  
+
+  // set range to 1 month
+  const oneMonthRange = async () => {
+    startDate = new Date(endDate.getTime() - (30*24*60*60*1000)); // 30 days ago
+    const data = await fetchData(startDate, endDate);
+    setChartData(data); // Update state with fetched data
+    renderLineChart(data, 30, '.dashboard-line-graph-container');
+  };  
+
+  // set range to 3 months
+  const threeMonthsRange = async () => {
+    startDate = new Date(endDate.getTime() - (90*24*60*60*1000)); // 90 days ago
+    console.log(startDate)
+    const data = await fetchData(startDate, endDate);
+    console.log(data)
+    //setChartData(data); // Update state with fetched data
+    renderLineChart(data, 90, '.dashboard-line-graph-container');
+  };  
+
+  // set range to 6 months
+  const sixMonthsRange = async () => {
+    startDate = new Date(endDate.getTime() - (180*24*60*60*1000)); // 180 days ago
+    console.log(endDate)
+    const data = await fetchData(startDate, endDate);
+    setChartData(data); // Update state with fetched data
+    renderLineChart(data, 180, '.dashboard-line-graph-container');
+  };  
+
+  // set range to 1 year
+  const oneYearRange = async () => {
+    startDate = new Date(endDate.getTime() - (365*24*60*60*1000));
+    console.log(startDate)
+    const data = await fetchData(startDate, endDate);
+    setChartData(data); // Update state with fetched data
+    renderLineChart(data, 365, '.dashboard-line-graph-container');
+  }; 
+
   const [activeTab, setActiveTab] = useState('weekly');
-  const [chartData, setChartData] = useState([]);
   useEffect(() => {
+    //renderLineChart(data, '.dashboard-line-graph-container');
     let values = [1, 1, 1];
     axios.get('http://localhost:5000/server/users/agg_data', 
     {
@@ -160,15 +210,15 @@ const Dashboard = (props) => {
 
 
     // Call the render function
-    if (!window.chartRendered) {
+    //if (!window.chartRendered) {
       renderDonutChart(data, '.dashboard-right-top');
-      console.log(allTransactions)
+      console.log(chartData)
       console.log(yearlyData)
-      renderLineChart(allTransactions, '.dashboard-right-bottom');
-      window.chartRendered = true;
-    }
+      //renderLineChart(chartData, '.dashboard-line-graph-container');
+      //window.chartRendered = true;
+   // }
   }, []);
-
+  
   
   return (
     <div className="dashboard-container">
@@ -194,8 +244,8 @@ const Dashboard = (props) => {
                   className="dashboard-nav"
                 ></nav>
                 <img
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-notification-bell-3114519-2598151.png?f=webp"
                   alt="image"
+                  src="https://cdn.iconscout.com/icon/free/png-256/free-notification-bell-3114519-2598151.png?f=webp"
                   className="dashboard-notificationicon"
                 />
                 <Link to="/register" className="dashboard-logoutbutton button">
@@ -224,6 +274,17 @@ const Dashboard = (props) => {
                       </svg>
                     </div>
                   </div>
+                  <nav
+                    data-thq="thq-mobile-menu-nav-links"
+                    data-role="Nav"
+                    className="dashboard-nav2"
+                  >
+                    <span className="navLink dashboard-text3">About</span>
+                    <span className="navLink dashboard-text4">Features</span>
+                    <span className="navLink dashboard-text5">Pricing</span>
+                    <span className="navLink dashboard-text6">Team</span>
+                    <span className="navLink dashboard-text7">Blog</span>
+                  </nav>
                   <div className="dashboard-button-container">
                     <button className="dashboard-login button">Login</button>
                     <button className="button dashboard-register">
@@ -260,11 +321,49 @@ const Dashboard = (props) => {
                 />
               </div>
             </header>
-            <div className="dashboard-dashboard-left">
-            </div>
+            <div className="dashboard-dashboard-left"></div>
             <div className="dashboard-dashboard-right">
               <div className="dashboard-container3">
-                <div className="dashboard-right-bottom"></div>
+                <div className="dashboard-right-bottom">
+                  <div className="dashboard-line-graph-container"></div>
+                  <div className="dashboard-right-bottom-buttons">
+                    <button
+                      type="button"
+                      className="dashboard-week-button button"
+                      onClick={oneWeekRange}
+                    >
+                      1W
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-one-month-button button"
+                      onClick={oneMonthRange}
+                    >
+                      1M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-three-months-button button"
+                      onClick={threeMonthsRange}
+                    >
+                      3M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-six-months-button button"
+                      onClick={sixMonthsRange}
+                    >
+                      6M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-one-year-button button"
+                      onClick={oneYearRange}
+                    >
+                      1Y
+                    </button>
+                  </div>
+                </div>
                 <div className="dashboard-right-top"></div>
               </div>
             </div>
