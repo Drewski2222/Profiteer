@@ -8,6 +8,13 @@ import { bool } from 'prop-types';
 
 import axios from 'axios';
 
+import {
+  usePlaidLink,
+  PlaidLinkOptions,
+  PlaidLinkOnSuccess,
+  PlaidLinkOnSuccessMetadata,
+} from 'react-plaid-link';
+
 let connectedPlaid = false;
 
 const Confirmation = (props) => {
@@ -34,15 +41,21 @@ const Confirmation = (props) => {
     if (linkTokenData === undefined) {
       return;
     }
-    const handler = Plaid.create({
+
+    const handler = PlaidLinkOptions = {
       token: linkTokenData.link_token,
-      onSuccess: async (publicToken, metadata) => {
+      onSuccess: async (public_token, metadata) => {
         console.log(
-          `I have a public token: ${publicToken} I should exchange this`
+          `I have a public token: ${public_token} I should exchange this`
         );
-        await exchangeToken(publicToken);
+        await exchangeToken(public_token);
       },
       onExit: (err, metadata) => {
+        // log and save error and metadata
+        // handle invalid link token
+        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
+          console.log('Need new LINK_TOKEN');
+        }
         console.log(
           `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
             metadata
@@ -52,8 +65,32 @@ const Confirmation = (props) => {
       onEvent: (eventName, metadata) => {
         console.log(`Event ${eventName}`);
       },
-    });
-    handler.open();
+    };
+
+    const { open, exit, ready } = usePlaidLink(handler);
+
+    // const badbadbad = Plaid.create({
+    //   token: linkTokenData.link_token,
+    //   onSuccess: async (publicToken, metadata) => {
+    //     console.log(
+    //       `I have a public token: ${publicToken} I should exchange this`
+    //     );
+    //     await exchangeToken(publicToken);
+    //   },
+    //   onExit: (err, metadata) => {
+    //     console.log(
+    //       `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
+    //         metadata
+    //       )}`
+    //     );
+    //   },
+    //   onEvent: (eventName, metadata) => {
+    //     console.log(`Event ${eventName}`);
+    //   },
+    // });
+    if (ready == true){
+      open();
+    }
   }
 
 
