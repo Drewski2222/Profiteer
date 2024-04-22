@@ -308,9 +308,9 @@ const addNewTransaction = async function (transactionObj) {
     pending: transactionObj.pending,
     pending_transaction_id: transactionObj.pendingTransactionId,
     personal_finance_category: transactionObj.personalFinanceCategory,
-    date: transactionObj.date,
-    authorized_date: transactionObj.authorizedDate,
-    merchant_name: transactionObj.merchantName,
+    date: new Date(transactionObj.date),
+    authorized_date: new Date(transactionObj.authorizedDate),
+    merchant_name: transactionObj.name,
     amount: transactionObj.amount,
     iso_currency_code: transactionObj.isoCurrencyCode,
   }
@@ -348,8 +348,8 @@ const modifyExistingTransaction = async function (transactionObj) {
     pending: transactionObj.pending,
     pending_transaction_id: transactionObj.pendingTransactionId,
     personal_finance_category: transactionObj.personalFinanceCategory,
-    date: transactionObj.date,
-    authorized_date: transactionObj.authorizedDate,
+    date: new Date(transactionObj.date),
+    authorized_date: new Date(transactionObj.authorizedDate),
     merchant_name: transactionObj.merchantName,
     amount: transactionObj.amount,
     iso_currency_code: transactionObj.isoCurrencyCode,
@@ -440,14 +440,16 @@ const saveCursorForItem = async function (transactionCursor, itemId) {
     item_id: itemId,
   }
   const cursor = {
-    transaction_cursor: transactionCursor,
+    $set: {
+      transaction_cursor: transactionCursor,
+    }
   }
 
   try {
     const client = server.client;
     const appdata = client.db("appdata");
-    const userInfo = appdata.collection("userInfo");
-    const result = await userInfo.updateOne(query, cursor);
+    const items = appdata.collection("items");
+    const result = await items.updateOne(query, cursor);
 
     return result;
   } catch (error) {

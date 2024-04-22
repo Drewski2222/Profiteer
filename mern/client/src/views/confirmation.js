@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom'
 
 import { Helmet } from 'react-helmet'
@@ -8,104 +8,62 @@ import { bool } from 'prop-types';
 
 import axios from 'axios';
 
-import {
-  usePlaidLink,
-  PlaidLinkOptions,
-  PlaidLinkOnSuccess,
-  PlaidLinkOnSuccessMetadata,
-} from 'react-plaid-link';
+import { usePlaidLink, PlaidLinkOptions } from 'react-plaid-link';
 
-let connectedPlaid = false;
+require('react-dom');
+window.React2 = require('react');
+console.log(window.React1 === window.React2);
 
 const Confirmation = (props) => {
-  // connect.js functionns
-  const initializeLink = async function () {
-    axios.post("http://localhost:5000/server/tokens/generate_link_token", {}).then((response) =>{
-      const linkTokenResponse = response;
-      const linkTokenData = linkTokenResponse.data;
-    // const linkTokenResponse = await fetch(`http://localhost:5000/server/tokens/generate_link_token`);
-    // console.log(linkTokenResponse);
-    // linkTokenData = await linkTokenResponse.json();
-    // console.log(linkTokenData);
+  const [linkTokenData, setLinkTokenData] = useState(null);
 
-    localStorage.setItem("linkTokenData", linkTokenResponse);
-    // make button lighter when clicked
-
-    console.log(JSON.stringify(linkTokenResponse));
-
-    startLink(linkTokenData);
-    })
-  }
-
-  const startLink = function(linkTokenData) {
-    if (linkTokenData === undefined) {
-      return;
-    }
-
-    const handler = PlaidLinkOptions = {
-      token: linkTokenData.link_token,
-      onSuccess: async (public_token, metadata) => {
-        console.log(
-          `I have a public token: ${public_token} I should exchange this`
-        );
-        await exchangeToken(public_token);
-      },
-      onExit: (err, metadata) => {
-        // log and save error and metadata
-        // handle invalid link token
-        if (error != null && error.error_code === 'INVALID_LINK_TOKEN') {
-          console.log('Need new LINK_TOKEN');
-        }
-        console.log(
-          `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
-            metadata
-          )}`
-        );
-      },
-      onEvent: (eventName, metadata) => {
-        console.log(`Event ${eventName}`);
-      },
+  useEffect(() => {
+    const initializeLink = async () => {
+      try {
+        const response = await axios.post("http://localhost:5000/server/tokens/generate_link_token", {});
+        setLinkTokenData(response.data);
+      } catch (error) {
+        console.error('Error fetching link token:', error);
+      }
     };
+    initializeLink();
+  }, []);
 
-    const { open, exit, ready } = usePlaidLink(handler);
+  const handleSuccess = async (public_token, metadata) => {
+    console.log(`I have a public token: ${public_token}. I should exchange this.`);
+    exchangeToken(public_token);
+  };
 
-    // const badbadbad = Plaid.create({
-    //   token: linkTokenData.link_token,
-    //   onSuccess: async (publicToken, metadata) => {
-    //     console.log(
-    //       `I have a public token: ${publicToken} I should exchange this`
-    //     );
-    //     await exchangeToken(publicToken);
-    //   },
-    //   onExit: (err, metadata) => {
-    //     console.log(
-    //       `I'm all done. Error: ${JSON.stringify(err)} Metadata: ${JSON.stringify(
-    //         metadata
-    //       )}`
-    //     );
-    //   },
-    //   onEvent: (eventName, metadata) => {
-    //     console.log(`Event ${eventName}`);
-    //   },
-    // });
-    if (ready == true){
+  const handleError = (err, metadata) => {
+    if (err != null && err.error_code === 'INVALID_LINK_TOKEN') {
+      console.log('Need new LINK_TOKEN');
+    }
+    console.log(`I'm all done. Error: ${JSON.stringify(err)}. Metadata: ${JSON.stringify(metadata)}`);
+  };
+
+  const { open, ready } = usePlaidLink({
+    token: linkTokenData ? linkTokenData.link_token : '',
+    onSuccess: handleSuccess,
+    onExit: handleError,
+    onEvent: (eventName, metadata) => {
+      console.log(`Event ${eventName}`);
+    },
+  });
+
+  useEffect(() => {
+    if (ready && linkTokenData) {
       open();
     }
-  }
+  }, [ready, linkTokenData, open]);
 
-
-
-  async function exchangeToken(publicToken) {
-    const tokenExchangeResponse = await fetch('/server/token/exchange_public_token', {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ public_token: publicToken }),
+  const exchangeToken = async (publicToken) => {
+    axios.post("http://localhost:5000/server/tokens/exchange_public_token", {
+      public_token: publicToken,
+    }).then((response) => {
+      // Handle response
+    }).catch((error) => {
+      console.error('Error exchanging public token:', error);
     });
-    const tokenExchangeData = await tokenExchangeResponse.json();
-
-    // figure this out
-    // window.location.href = "index.html";
-    checkConnectedStatus();
   }
 
   // index.js functions
@@ -184,20 +142,7 @@ const Confirmation = (props) => {
       },
     });
     handler.open();
-  }
-  async function exchangeToken(publicToken) {
-    const tokenExchangeResponse = await fetch(`/server/token/exchange_public_token`, {
-      method: "POST",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ public_token: publicToken }),
-    });
-    // This is where I'd add our error checking... if our server returned any
-    // errors.
-    const tokenExchangeData = await tokenExchangeResponse.json();
-    console.log("Done exchanging our token");
-    window.location.href = "index.html";
-  }
-  
+  }  
 
   return (
     <div className="confirmation-container">
@@ -224,7 +169,7 @@ const Confirmation = (props) => {
               <button
                 type="submit"
                 className="confirmation-register button"
-                onClick={initializeLink}
+                onClick={Confirmation}
               >
                 <span className="confirmation-text05">Connect to Plaid</span>
               </button>

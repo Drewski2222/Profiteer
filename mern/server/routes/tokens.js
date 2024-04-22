@@ -39,8 +39,9 @@ router.post("/generate_link_token", async (req, res, next) => {
  */
 router.post("/exchange_public_token", async (req, res, next) => {
   try {
-    const userId = getLoggedInUserId(req);
-    const publicToken = escape(req.body.publicToken);
+    //const userId = getLoggedInUserId(req);
+    const userId = '001'
+    const publicToken = escape(req.body.public_token);
 
     const tokenResponse = await plaidClient.itemPublicTokenExchange({
       public_token: publicToken,

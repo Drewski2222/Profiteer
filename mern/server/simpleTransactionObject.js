@@ -4,26 +4,28 @@
  */
 class SimpleTransaction {
     constructor(
-      id,
+      transactionId,
       userId,
       accountId,
-      category,
+      personalFinanceCategory,
       date,
       authorizedDate,
       name,
       amount,
       isoCurrencyCode,
+      pending,
       pendingTransactionId
     ) {
-      this.id = id;
+      this.transactionId = transactionId;
       this.userId = userId;
       this.accountId = accountId;
-      this.category = category;
+      this.personalFinanceCategory = personalFinanceCategory;
       this.date = date;
       this.authorizedDate = authorizedDate;
       this.name = name;
       this.amount = amount;
       this.isoCurrencyCode = isoCurrencyCode;
+      this.pending = pending;
       this.pendingTransactionId = pendingTransactionId;
     }
   
@@ -45,7 +47,8 @@ class SimpleTransaction {
         txnObj.merchant_name ?? txnObj.name,
         txnObj.amount,
         txnObj.iso_currency_code,
-        txnObj.pending_transaction_id
+        txnObj.pending,
+        txnObj.pending_transaction_id,
       );
     }
   }
