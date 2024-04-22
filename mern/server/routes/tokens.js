@@ -15,7 +15,8 @@ const WEBHOOK_URL =
  */
 router.post("/generate_link_token", async (req, res, next) => {
   try {
-    const userId = getLoggedInUserId(req);
+    //const userId = getLoggedInUserId(req);
+    const userId = '001'
     const userObject = { client_user_id: userId };
     const tokenResponse = await plaidClient.linkTokenCreate({
       user: userObject,
@@ -23,7 +24,7 @@ router.post("/generate_link_token", async (req, res, next) => {
       client_name: "Profiteer",
       language: "en",
       country_codes: ["US"],
-      webhook: WEBHOOK_URL,
+      //webhook: WEBHOOK_URL,
     });
     res.json(tokenResponse.data);
   } catch (error) {

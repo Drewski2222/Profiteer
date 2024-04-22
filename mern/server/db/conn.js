@@ -1,4 +1,5 @@
 const { MongoClient } = require("mongodb");
+const uri = 'mongodb+srv://trevorgross:S1ejkC1380RPdh8N@profiteerdb.v3zfcrx.mongodb.net/?retryWrites=true&w=majority&appName=profiteerdb';
 var client;
 var appdata;
 var userInfo;
@@ -65,10 +66,6 @@ var userInfo;
 // run().catch(console.dir);
 
 function connectClient() {
-      // Local setup
-      if (!process.env.ATLAS_URI) throw new Error("Invalid/missing database key");
-
-      const uri = process.env.ATLAS_URI;
       const options = {};
 
       client = new MongoClient(uri, options);

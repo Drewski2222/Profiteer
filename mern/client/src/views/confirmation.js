@@ -6,23 +6,31 @@ import { Helmet } from 'react-helmet'
 import './confirmation.css'
 import { bool } from 'prop-types';
 
+import axios from 'axios';
+
 let connectedPlaid = false;
 
 const Confirmation = (props) => {
   // connect.js functionns
   const initializeLink = async function () {
-    const linkTokenResponse = await fetch(`/server/token/create_link_token`);
-    linkTokenData = await linkTokenResponse.json();
+    axios.post("http://localhost:5000/server/tokens/generate_link_token", {}).then((response) =>{
+      const linkTokenResponse = response;
+      const linkTokenData = linkTokenResponse.data;
+    // const linkTokenResponse = await fetch(`http://localhost:5000/server/tokens/generate_link_token`);
+    // console.log(linkTokenResponse);
+    // linkTokenData = await linkTokenResponse.json();
+    // console.log(linkTokenData);
 
     localStorage.setItem("linkTokenData", linkTokenResponse);
     // make button lighter when clicked
 
     console.log(JSON.stringify(linkTokenResponse));
 
-    startLink();
+    startLink(linkTokenData);
+    })
   }
 
-  const startLink = function() {
+  const startLink = function(linkTokenData) {
     if (linkTokenData === undefined) {
       return;
     }
