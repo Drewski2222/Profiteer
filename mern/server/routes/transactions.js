@@ -126,7 +126,7 @@ const syncTransactions = async function (itemId) {
         SimpleTransaction.fromPlaidTransaction(txnObj, userId)
       );
       if (result) {
-        summary.added += result.changes;
+        summary.added += 1;
       }
     })
   );
@@ -139,7 +139,7 @@ const syncTransactions = async function (itemId) {
         SimpleTransaction.fromPlaidTransaction(txnObj, userId)
       );
       if (result) {
-        summary.modified += result.changes;
+        summary.modified += 1;
       }
     })
   );
@@ -150,7 +150,7 @@ const syncTransactions = async function (itemId) {
       console.log(`I want to remove ${txnObj.transaction_id}`);
       const result = await db.deleteExistingTransaction(txnObj.transaction_id);
       if (result) {
-        summary.removed += result.changes;
+        summary.removed += 1;
       }
     })
   );
