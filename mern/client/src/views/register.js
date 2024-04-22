@@ -40,6 +40,7 @@ const Register = (props) => {
         password : password,
       }).then((response)=> {
         console.log(response);
+        //history.push('/chatGPT_plaid');
         history.push('/confirmation');
       })
       .catch((error) => {

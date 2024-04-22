@@ -15,6 +15,8 @@ import About from './views/about'
 import Home from './views/home'
 import Dashboard from './views/dashboard'
 import NotFound from './views/not-found'
+//import chatGPT_plaid from './views/chatGPT_plaid'
+//<Route component={chatGPT_plaid} exact path="/chatGPT_plaid" />
 
 const App = () => {
   return (

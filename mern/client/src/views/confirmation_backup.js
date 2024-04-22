@@ -6,20 +6,16 @@ import { Helmet } from 'react-helmet'
 import './confirmation.css'
 import { bool } from 'prop-types';
 
-let connectedPlaid = false;
-
 const Confirmation = (props) => {
   // connect.js functionns
   const initializeLink = async function () {
-    const linkTokenResponse = await fetch(`/server/token/create_link_token`);
+    const linkTokenResponse = await fetch(`/server/token/generate_link_token`);
     linkTokenData = await linkTokenResponse.json();
-
-    localStorage.setItem("linkTokenData", linkTokenResponse);
+    localStorage.setItem("linkTokenData", JSON.stringify(linkTokenData));
+    
     // make button lighter when clicked
 
-    console.log(JSON.stringify(linkTokenResponse));
-
-    startLink();
+    console.log(JSON.stringify(linkTokenData));
   }
 
   const startLink = function() {
@@ -60,7 +56,6 @@ const Confirmation = (props) => {
 
     // figure this out
     // window.location.href = "index.html";
-    checkConnectedStatus();
   }
 
   // index.js functions
@@ -71,12 +66,10 @@ const Confirmation = (props) => {
       console.log(JSON.stringify(connectedData));
       if (connectedData.status === true) {
         // set connected stuff in html
-        connectedPlaid = true;
         showInstitutionName();
       }
       else {
         // set disconnected stuff in html
-        connectedPlaid = false;
       }
     }
     catch (error) {
@@ -89,12 +82,10 @@ const Confirmation = (props) => {
     const bankJSON = await bankData.json();
     console.log(JSON.stringify(bankJSON));
     // set html stuff
-    connectedPlaid = true;
-    getTransactions();
   };
 
   const getTransactions = async function() {
-    const transactionResponse = await fetch('/server/token/transactions');
+    const transactionResponse = await fetch('server/token/transactions');
     const transactionData = await transactionResponse.json();
     const simplifiedData = transactionData.transactions.map((item) => {
       return {
@@ -106,7 +97,6 @@ const Confirmation = (props) => {
     });
     console.table(simplifiedData);
     // html stuff
-    
   }
 
   // oauth-return.js functions
@@ -141,7 +131,7 @@ const Confirmation = (props) => {
     handler.open();
   }
   async function exchangeToken(publicToken) {
-    const tokenExchangeResponse = await fetch(`/server/token/exchange_public_token`, {
+    const tokenExchangeResponse = await fetch(`/api/exchange_public_token`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
       body: JSON.stringify({ public_token: publicToken }),
@@ -179,7 +169,7 @@ const Confirmation = (props) => {
               <button
                 type="submit"
                 className="confirmation-register button"
-                onClick={initializeLink}
+                onClick={Confirmation}
               >
                 <span className="confirmation-text05">Connect to Plaid</span>
               </button>
