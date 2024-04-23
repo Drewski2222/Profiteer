@@ -71,6 +71,16 @@ export const renderDonutChart = (data, range, containerSelector) => {
             .duration(200)
             .attr("d", hoverArc)
             .style("opacity", 1);
+
+        d3.select(this).select("text")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
+
+        d3.select(this).select("polyline")
+            .transition()
+            .duration(200)
+            .style("opacity", 1);
     })
     .on("mouseout", function(event, d) {
         d3.selectAll(".arc path")
@@ -78,6 +88,16 @@ export const renderDonutChart = (data, range, containerSelector) => {
             .duration(200)
             .style("opacity", 1)
             .attr("d", arc);
+
+        d3.select(this).select("text")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
+        
+        d3.select(this).select("polyline")
+            .transition()
+            .duration(200)
+            .style("opacity", 0);
     });
 
     // Add labels and lines
@@ -89,6 +109,7 @@ export const renderDonutChart = (data, range, containerSelector) => {
         })
         .attr("dy", ".35em")
         .attr("text-anchor", d => midAngle(d) < Math.PI ? "start" : "end")
+        .style("opacity", 0)
         .text(d => d.data.label);
 
     g.append("polyline")
@@ -100,12 +121,14 @@ export const renderDonutChart = (data, range, containerSelector) => {
         })
         .style("fill", "none")
         .style("stroke", "black")
+        .style("opacity", 0)
         .style("stroke-width", "1px");
 
     function midAngle(d) {
         return d.startAngle + (d.endAngle - d.startAngle) / 2;
     }
 };
+
 
 export const renderLineChart = (data, range, containerSelector) => {
     let titleText;
@@ -265,7 +288,6 @@ export const renderLineChart = (data, range, containerSelector) => {
         });
 };
 
-// Assuming this is added to your 'charts.js' file or wherever your chart functions reside
 export const renderBudgetPieChart = (spending, budget, containerSelector) => {
     // Remove any existing svg elements
     const d3 = window.d3; // Ensure d3 is available globally or import it

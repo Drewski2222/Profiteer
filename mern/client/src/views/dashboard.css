@@ -462,3 +462,10 @@
   color: #888;
 }
 
+.notification-icon {
+  transition: opacity 0.3s ease;
+}
+
+.notification-icon:hover {
+  opacity: 0.7;
+}

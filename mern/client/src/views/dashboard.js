@@ -281,7 +281,7 @@ const Dashboard = (props) => {
         <img
           alt="notification"
           src="https://cdn.iconscout.com/icon/free/png-256/free-notification-bell-3114519-2598151.png?f=webp"
-          className="dashboard-notificationicon"
+          className="dashboard-notificationicon notification-icon"
           onClick={handleNotificationClick}
         />
         {notificationCount > 0 && (
