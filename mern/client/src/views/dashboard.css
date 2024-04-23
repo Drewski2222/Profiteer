@@ -244,19 +244,24 @@
   justify-content: center;
 }
 .dashboard-week-button {
-  background-color: #32af12;
+  background-color: #4974A5;
+  color:#ffffff
 }
 .dashboard-one-month-button {
-  background-color: #32AF12;
+  background-color: #4974A5;
+  color:#ffffff
 }
 .dashboard-three-months-button {
-  background-color: #32AF12;
+  background-color: #4974A5;
+  color:#ffffff
 }
 .dashboard-six-months-button {
-  background-color: #32AF12;
+  background-color: #4974A5;
+  color:#ffffff
 }
 .dashboard-one-year-button {
-  background-color: #32AF12;
+  background-color: #4974A5;
+  color:#ffffff
 }
 .dashboard-right-top {
   flex: 0 0 auto;
