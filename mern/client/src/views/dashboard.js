@@ -118,6 +118,21 @@ const fetchDataCategories = async (start, end) => {
 
   allDonutTransactions = await fetchDataCategories(startDate, endDate);
 const Dashboard = (props) => {
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [notifications, setNotifications] = useState([
+    { id: 1, text: 'Welcome to Profiteer!' },
+    { id: 2, text: 'Connect with Plaid to get started!' },
+    { id: 3, text: 'The Dashboard shows different financial data unique to you and your budget!' },
+  ]);
+  const [notificationCount, setNotificationCount] = useState(notifications.length);
+  const handleNotificationClick = () => {
+    setShowNotifications(!showNotifications);
+  };
+
+  const handleCloseNotification = (id) => {
+    setNotifications(notifications.filter((notification) => notification.id !== id));
+    setNotificationCount(notificationCount - 1);
+  };
   const [chartData, setChartData] = useState(allTransactions);
   // set range to 1 week
   const oneWeekRange = async () => {
@@ -240,11 +255,36 @@ const Dashboard = (props) => {
                   data-role="Nav"
                   className="dashboard-nav"
                 ></nav>
-                <img
-                  alt="image"
-                  src="https://cdn.iconscout.com/icon/free/png-256/free-notification-bell-3114519-2598151.png?f=webp"
-                  className="dashboard-notificationicon"
-                />
+<div className="notification-bell-container">
+        <img
+          alt="notification"
+          src="https://cdn.iconscout.com/icon/free/png-256/free-notification-bell-3114519-2598151.png?f=webp"
+          className="dashboard-notificationicon"
+          onClick={handleNotificationClick}
+        />
+        {notificationCount > 0 && (
+    <span className="notification-counter">{notificationCount}</span>
+  )}
+        {/* Notification tab */}
+        {showNotifications && (
+          <div className="notification-tab">
+            <h3>Notifications</h3>
+            <ul>
+              {notifications.map((notification) => (
+                <li key={notification.id}>
+                  {notification.text}
+                  <button
+                    className="close-button"
+                    onClick={() => handleCloseNotification(notification.id)}
+                  >
+                    X
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
                 <Link to="/register" className="dashboard-logoutbutton button">
                   <span className="dashboard-text1">Log Out</span>
                 </Link>
