@@ -76,7 +76,7 @@ const fetchDataCategories = async (start, end) => {
     // Convert start and end dates to ISO strings
     const startDate = new Date(start).toISOString().split('T')[0];
     const endDate = new Date(end).toISOString().split('T')[0];
-
+    console.log(startDate, endDate)
     // Fetch transactions data
     const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
       params: {
@@ -117,11 +117,11 @@ const init = async () => {
   startDate = new Date();
   startDate.setDate(endDate.getDate() - 30); // 30 days ago
   allTransactions = await fetchData(startDate, endDate);
-  renderLineChart(allTransactions, 30, '.dashboard-line-graph-container');
+  allDonutTransactions = await fetchDataCategories(startDate, endDate);
   console.log(allTransactions);
 }
 
-allDonutTransactions = await fetchDataCategories(startDate, endDate);
+
 const Dashboard = (props) => {
   //init();
   const [showNotifications, setShowNotifications] = useState(false);
