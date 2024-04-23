@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import { Link } from 'react-router-dom'
 import { Helmet } from 'react-helmet'
 import { useEffect } from 'react'
-import {renderDonutChart, renderLineChart} from '../components/charts'
+import {renderDonutChart, renderLineChart, renderBudgetPieChart} from '../components/charts'
 import './dashboard.css'
 import axios from 'axios'
 
@@ -380,7 +380,9 @@ const Dashboard = (props) => {
                 />
               </div>
             </header>
-            <div className="dashboard-dashboard-left"></div>
+            <div className="dashboard-dashboard-left">
+              
+            </div>
             <div className="dashboard-dashboard-right">
               <div className="dashboard-container3">
                 <div className="dashboard-right-bottom">

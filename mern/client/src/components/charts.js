@@ -264,3 +264,51 @@ export const renderLineChart = (data, range, containerSelector) => {
             tooltip.transition().duration(200).style("opacity", 0);
         });
 };
+
+// Assuming this is added to your 'charts.js' file or wherever your chart functions reside
+export const renderBudgetPieChart = (spending, budget, containerSelector) => {
+    // Remove any existing svg elements
+    const d3 = window.d3; // Ensure d3 is available globally or import it
+    d3.select(containerSelector).selectAll("svg").remove();
+
+    const width = 360, height = 360;
+    const radius = Math.min(width, height) / 2;
+    
+    const color = d3.scaleOrdinal()
+        .range(spending > budget ? ["#ff6347", "#ccc"] : ["#4682b4", "#ccc"]); // Red if over budget, otherwise blue
+
+    const data = [
+        { name: "Spent", value: Math.min(spending, budget) },
+        { name: "Remaining", value: Math.max(0, budget - spending) }
+    ];
+
+    const svg = d3.select(containerSelector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .append("g")
+        .attr("transform", `translate(${width / 2}, ${height / 2})`);
+
+    const arc = d3.arc()
+        .outerRadius(radius - 10)
+        .innerRadius(radius - 70);
+
+    const pie = d3.pie()
+        .sort(null)
+        .value(d => d.value);
+
+    const g = svg.selectAll(".arc")
+        .data(pie(data))
+        .enter().append("g")
+        .attr("class", "arc");
+
+    g.append("path")
+        .attr("d", arc)
+        .style("fill", d => color(d.data.name));
+
+    g.append("text")
+        .attr("transform", d => `translate(${arc.centroid(d)})`)
+        .attr("dy", ".35em")
+        .attr("text-anchor", "middle")
+        .text(d => `${d.data.name}: ${d.data.value}`);
+};
