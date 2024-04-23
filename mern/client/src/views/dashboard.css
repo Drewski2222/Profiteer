@@ -244,34 +244,59 @@
   justify-content: center;
 }
 .dashboard-week-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-one-month-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-three-months-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-six-months-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-one-year-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-right-top {
   flex: 0 0 auto;
   width: 635px;
-  border: 2px dashed rgba(120, 120, 120, 0.4);
   height: 317.5px;
   display: flex;
   align-self: center;
   align-items: flex-start;
   flex-direction: column;
+}
+.dashboard-donut-graph-container {
+  width: 100%;
+  background-color: white;
+  border: 4px solid rgba(0, 0, 0, 1);
+  height: 261px;
+  display: flex;
+  align-items: flex-start;
+}
+.dashboard-right-top-buttons {
+  gap: 10px;
+  width: 100%;
+  height: 69px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-week-button1 {
+  background-color: #37447E;
+}
+.dashboard-one-month-button1 {
+  background-color: #37447E;
+}
+.dashboard-three-months-button1 {
+  background-color: #37447E;
+}
+.dashboard-six-months-button1 {
+  background-color: #37447E;
+}
+.dashboard-one-year-button1 {
+  background-color: #37447E;
 }
 @media(max-width: 767px) {
   .dashboard-desktop-menu {
@@ -342,3 +367,62 @@
     justify-content: center;
   }
 }
+
+.notification-bell-container {
+  position: relative;
+}
+
+.notification-counter {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background-color: red;
+  color: white;
+  font-size: 12px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.notification-tab {
+  position: absolute;
+  top: calc(100% + 10px); /* Position below the bell icon */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 999; /* Ensure it's above other content */
+}
+
+.notification-tab h3 {
+  margin-top: 0;
+}
+
+.notification-tab ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notification-tab ul li {
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.close-button {
+  margin-left: 5px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 12px;
+  color: #888;
+}
+
