@@ -381,10 +381,23 @@ const Dashboard = (props) => {
               </div>
             </header>
             <div className="dashboard-dashboard-left">
-              
+              <div className="dashboard-budget-graph-container"></div>
+              <div className="dashboard-container3">
+                <span className="dashboard-text8">
+                  Enter desired spending limit for 1 month: 
+                </span>
+                <input
+                  type="text"
+                  placeholder="Spending Limit"
+                  className="dashboard-budget-input input"
+                />
+                <button type="button" className="dashboard-button button">
+                  Submit
+                </button>
+              </div>
             </div>
             <div className="dashboard-dashboard-right">
-              <div className="dashboard-container3">
+              <div className="dashboard-container4">
                 <div className="dashboard-right-bottom">
                   <div className="dashboard-line-graph-container"></div>
                   <div className="dashboard-right-bottom-buttons">
