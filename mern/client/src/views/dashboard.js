@@ -112,18 +112,18 @@ const fetchDataCategories = async (start, end) => {
   }
 };
 const init = async () => {
-  // use 1 month data by default
+  //use 1 month data by default
   endDate = new Date(); // Current date
   startDate = new Date();
   startDate.setDate(endDate.getDate() - 30); // 30 days ago
-  allTransactions = await fetchData(startDate, endDate);
+  //allTransactions = await fetchData(startDate, endDate);
   allDonutTransactions = await fetchDataCategories(startDate, endDate);
-  console.log(allTransactions);
+  console.log(allDonutTransactions);
 }
 
 
 const Dashboard = (props) => {
-  //init();
+  init();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'Welcome to Profiteer!' },
