@@ -162,23 +162,9 @@ const Confirmation = (props) => {
                 <br></br>
                 <span>your financial journey with Profiteer!</span>
               </h1>
-              
-             
-
-
-              <button
-                type="submit"
-                className="confirmation-register button"
-                onClick={Confirmation}
-              >
-                <span className="confirmation-text05">Connect to Plaid</span>
-              </button>
-
-
-
-
-
-
+            <Link to="/dashboard" className="confirmation-register button">
+              <span className="confirmation-text05">Access Dashboard</span>
+            </Link>
             </div>
           </div>
           <div className="confirmation-container3">
