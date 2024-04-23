@@ -1,6 +1,7 @@
 import * as d3 from 'd3'
 
 export const renderDonutChart = (data, range, containerSelector) => {
+
     let titleText;
     if (range === 7) {
         titleText = 'Spending by Category (1 Week)'
@@ -13,6 +14,8 @@ export const renderDonutChart = (data, range, containerSelector) => {
     } else if (range === 365) {
         titleText = 'Spending by Category (1 Year)'
     }
+
+    d3.select(containerSelector).selectAll("*").remove();
     // Set up the dimensions and radius
     const width = 635;
     const height = 240;
