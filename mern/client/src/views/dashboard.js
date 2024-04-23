@@ -29,6 +29,7 @@ const fetchData = async (start, end) => {
         sum: false
       }
     });
+    console.log(transactionsResponse)
     transactionsData = transactionsResponse.data;
     console.log(transactionsData)
     // Calculate the number of days in the date range
@@ -116,12 +117,13 @@ const init = async () => {
   startDate = new Date();
   startDate.setDate(endDate.getDate() - 30); // 30 days ago
   allTransactions = await fetchData(startDate, endDate);
+  renderLineChart(allTransactions, 30, '.dashboard-line-graph-container');
   console.log(allTransactions);
 }
 
-
-  allDonutTransactions = await fetchDataCategories(startDate, endDate);
+allDonutTransactions = await fetchDataCategories(startDate, endDate);
 const Dashboard = (props) => {
+  //init();
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'Welcome to Profiteer!' },
@@ -137,7 +139,6 @@ const Dashboard = (props) => {
     setNotifications(notifications.filter((notification) => notification.id !== id));
     setNotificationCount(notificationCount - 1);
   };
-  init();
   const [chartData, setChartData] = useState(allTransactions);
   // set range to 1 week
   const oneWeekRange = async () => {
