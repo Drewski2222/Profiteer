@@ -7,6 +7,8 @@ import './dashboard.css'
 import axios from 'axios'
 
 let allTransactions = [];
+let endDate;
+let startDate;
 
 const fetchData = async (start, end) => {
   let dailyTransactions = [];
@@ -17,7 +19,7 @@ const fetchData = async (start, end) => {
     // Convert start and end dates to ISO strings
     const startDate = new Date(start).toISOString().split('T')[0];
     const endDate = new Date(end).toISOString().split('T')[0];
-
+    console.log(startDate, endDate)
     // Fetch transactions data
     const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
       params: {
@@ -27,7 +29,7 @@ const fetchData = async (start, end) => {
       }
     });
     transactionsData = transactionsResponse.data;
-
+    console.log(transactionsData)
     // Calculate the number of days in the date range
     const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
     const diffDays = Math.round(Math.abs((new Date(endDate) - new Date(startDate)) / oneDay));
@@ -63,14 +65,17 @@ const fetchData = async (start, end) => {
     console.error('Error fetching data:', error);
   }
 };
-
+const init = async () => {
   // use 1 month data by default
-  let endDate = new Date(); // Current date
-  let startDate = new Date();
+  endDate = new Date(); // Current date
+  startDate = new Date();
   startDate.setDate(endDate.getDate() - 30); // 30 days ago
   allTransactions = await fetchData(startDate, endDate);
   console.log(allTransactions);
+}
+
 const Dashboard = (props) => {
+  init();
   const [chartData, setChartData] = useState(allTransactions);
   // set range to 1 week
   const oneWeekRange = async () => {
