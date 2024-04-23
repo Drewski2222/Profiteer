@@ -288,7 +288,6 @@ export const renderLineChart = (data, range, containerSelector) => {
         });
 };
 
-// Assuming this is added to your 'charts.js' file or wherever your chart functions reside
 export const renderBudgetPieChart = (spending, budget, containerSelector) => {
     // Remove any existing svg elements
     const d3 = window.d3; // Ensure d3 is available globally or import it
