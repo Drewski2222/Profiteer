@@ -229,8 +229,7 @@
 }
 .dashboard-line-graph-container {
   width: 100%;
-  background-color: white;
-  border: 4px solid rgba(0, 0, 0, 1);
+  border: 2px dashed rgba(120, 120, 120, 0.4);
   height: 261px;
   display: flex;
   align-items: flex-start;
@@ -244,34 +243,58 @@
   justify-content: center;
 }
 .dashboard-week-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-one-month-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-three-months-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-six-months-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-one-year-button {
-  background-color: #4974A5;
-  color:#ffffff
+  background-color: #37447E;
 }
 .dashboard-right-top {
   flex: 0 0 auto;
   width: 635px;
-  border: 2px dashed rgba(120, 120, 120, 0.4);
   height: 317.5px;
   display: flex;
   align-self: center;
   align-items: flex-start;
   flex-direction: column;
+}
+.dashboard-donut-graph-container {
+  width: 100%;
+  border: 2px dashed rgba(120, 120, 120, 0.4);
+  height: 261px;
+  display: flex;
+  align-items: flex-start;
+}
+.dashboard-right-top-buttons {
+  gap: 10px;
+  width: 100%;
+  height: 69px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dashboard-week-button1 {
+  background-color: #37447E;
+}
+.dashboard-one-month-button1 {
+  background-color: #37447E;
+}
+.dashboard-three-months-button1 {
+  background-color: #37447E;
+}
+.dashboard-six-months-button1 {
+  background-color: #37447E;
+}
+.dashboard-one-year-button1 {
+  background-color: #37447E;
 }
 @media(max-width: 767px) {
   .dashboard-desktop-menu {

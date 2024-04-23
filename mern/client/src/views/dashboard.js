@@ -7,6 +7,7 @@ import './dashboard.css'
 import axios from 'axios'
 
 let allTransactions = [];
+let allDonutTransactions = [];
 
 const fetchData = async (start, end) => {
   let dailyTransactions = [];
@@ -64,12 +65,58 @@ const fetchData = async (start, end) => {
   }
 };
 
+const fetchDataCategories = async (start, end) => {
+  let transactionsData = [];
+  let rangeIncomeByCategory = {};
+
+  try {
+    // Convert start and end dates to ISO strings
+    const startDate = new Date(start).toISOString().split('T')[0];
+    const endDate = new Date(end).toISOString().split('T')[0];
+
+    // Fetch transactions data
+    const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
+      params: {
+        dateRangeStart: startDate,
+        dateRangeEnd: endDate,
+        sum: false
+      }
+    });
+    transactionsData = transactionsResponse.data;
+
+    // Process transactions data
+    transactionsData.forEach(transaction => {
+      let category = transaction.personal_finance_category;
+      // Convert category to title case with spaces instead of underscores
+      category = category.toLowerCase().split('_').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
+      
+      if (!rangeIncomeByCategory[category]) {
+        rangeIncomeByCategory[category] = 0;
+      }
+      rangeIncomeByCategory[category] += transaction.amount;
+    });
+
+    // Convert aggregated data to an array format for donut chart
+    const data = Object.entries(rangeIncomeByCategory).map(([label, value]) => ({
+      label,
+      value
+    }));
+
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+};
+
   // use 1 month data by default
   let endDate = new Date(); // Current date
   let startDate = new Date();
   startDate.setDate(endDate.getDate() - 30); // 30 days ago
   allTransactions = await fetchData(startDate, endDate);
   console.log(allTransactions);
+
+  allDonutTransactions = await fetchDataCategories(startDate, endDate);
 const Dashboard = (props) => {
   const [chartData, setChartData] = useState(allTransactions);
   // set range to 1 week
@@ -117,109 +164,59 @@ const Dashboard = (props) => {
     renderLineChart(data, 365, '.dashboard-line-graph-container');
   }; 
 
+  const [chartDonutData, setDonutData] = useState(allDonutTransactions);
+
+  const oneWeekRangeDonut = async () => {
+    startDate = new Date(endDate.getTime() - (7*24*60*60*1000)); // 7 days ago
+    const data = await fetchDataCategories(startDate, endDate);
+    console.log(startDate)
+    setDonutData(data); // Update state with fetched data
+    renderDonutChart(data, 7, '.dashboard-donut-graph-container');
+  };  
+
+  // set range to 1 month
+  const oneMonthRangeDonut = async () => {
+    startDate = new Date(endDate.getTime() - (30*24*60*60*1000)); // 30 days ago
+    const data = await fetchDataCategories(startDate, endDate);
+    setDonutData(data); // Update state with fetched data
+    renderDonutChart(data, 30, '.dashboard-donut-graph-container');
+  };  
+
+  // set range to 3 months
+  const threeMonthsRangeDonut = async () => {
+    startDate = new Date(endDate.getTime() - (90*24*60*60*1000)); // 90 days ago
+    console.log(startDate)
+    const data = await fetchDataCategories(startDate, endDate);
+    console.log(data)
+    setDonutData(data); // Update state with fetched data
+    renderDonutChart(data, 90, '.dashboard-donut-graph-container');
+  };  
+
+  // set range to 6 months
+  const sixMonthsRangeDonut = async () => {
+    startDate = new Date(endDate.getTime() - (180*24*60*60*1000)); // 180 days ago
+    console.log(endDate)
+    const data = await fetchDataCategories(startDate, endDate);
+    setDonutData(data); // Update state with fetched data
+    renderDonutChart(data, 180, '.dashboard-donut-graph-container');
+  };  
+
+  // set range to 1 year
+  const oneYearRangeDonut = async () => {
+    startDate = new Date(endDate.getTime() - (365*24*60*60*1000));
+    console.log(startDate)
+    const data = await fetchDataCategories(startDate, endDate);
+    setDonutData(data); // Update state with fetched data
+    renderDonutChart(data, 365, '.dashboard-donut-graph-container');
+  }; 
+  
   const [activeTab, setActiveTab] = useState('weekly');
   useEffect(() => {
-    //renderLineChart(data, '.dashboard-line-graph-container');
-    let values = [1, 1, 1];
-    axios.get('http://localhost:5000/server/users/agg_data', 
-    {
-      params: {
-        //personalFinanceCategory: 'GENERAL_MERCHANDISE',
-        dateRangeStart: '2024-03-01',
-        dateRangeEnd: '2024-04-01',
-        sum: false,
-      }
-    }).then((response) => {
-      console.log(response);
-      values[0] = (response.data)
-    })
-
-    axios.get('http://localhost:5000/server/users/agg_data', 
-    {
-      params: {
-        personalFinanceCategory: 'GROCERIES',
-      }
-    }).then((response) => {
-      values[1] = (response.data)
-    })
-
-    axios.get('http://localhost:5000/server/users/agg_data', 
-    {
-      params: {
-        personalFinanceCategory: 'UTILITIES',
-      }
-    }).then((response) => {
-      values[2] = (response.data)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    // Sample data for the donut chart
-    console.log(values);
-    const data = [
-      { label: "Merch", value: values[0] },
-      { label: "Groceries", value: values[1] },
-      { label: "Utilities", value: values[2] }
-    ];
-
-    //test data for the line chart
-    const weeklyData = [
-      { date: "2024-01-01", value: 10 },
-      { date: "2024-02-01", value: 20 },
-      { date: "2024-03-01", value: 15 },
-      { date: "2024-04-01", value: 25 },
-      { date: "2024-05-01", value: 18 },
-      { date: "2024-06-01", value: 30 }
-    ]
-
-    const monthlyData = [
-      { date: "2024-01-01", value: 63 },
-      { date: "2024-02-01", value: 20 },
-      { date: "2024-03-01", value: 42 },
-      { date: "2024-04-01", value: 55 },
-      { date: "2024-05-01", value: 23 },
-      { date: "2024-06-01", value: 50 }
-    ]
-
-    const yearlyData = [
-      { date: "2024-01-01", value: 34 },
-      { date: "2024-02-01", value: 20 },
-      { date: "2024-03-01", value: 65 },
-      { date: "2024-04-01", value: 55 },
-      { date: "2024-05-01", value: 72 },
-      { date: "2024-06-01", value: 21 },
-      { date: "2024-06-01", value: 60}
-    ]
-
-    const handleTabChange = (tab) => {
-      setActiveTab(tab);
-      switch (tab) {
-        case 'weekly':
-          setChartData(weeklyData);
-          break;
-        case 'monthly':
-          setChartData(monthlyData);
-          break;
-        case 'yearly':
-          setChartData(yearlyData);
-          break;
-        default:
-          break;
-      }
-    };
+    oneWeekRangeDonut();
+    oneWeekRange();
+  },[]);
 
 
-    // Call the render function
-    //if (!window.chartRendered) {
-      renderDonutChart(data, '.dashboard-right-top');
-      console.log(chartData)
-      console.log(yearlyData)
-      oneWeekRange();
-      //window.chartRendered = true;
-   // }
-  }, []);
-  
-  
   return (
     <div className="dashboard-container">
       <Helmet>
@@ -364,7 +361,46 @@ const Dashboard = (props) => {
                     </button>
                   </div>
                 </div>
-                <div className="dashboard-right-top"></div>
+                <div className="dashboard-right-top">
+                  <div className="dashboard-donut-graph-container"></div>
+                  <div className="dashboard-right-top-buttons">
+                    <button
+                      type="button"
+                      className="dashboard-week-button1 button"
+                      onClick={oneWeekRangeDonut}
+                    >
+                      1W
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-one-month-button1 button"
+                      onClick={oneMonthRangeDonut}
+                    >
+                      1M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-three-months-button1 button"
+                      onClick={threeMonthsRangeDonut}
+                    >
+                      3M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-six-months-button1 button"
+                      onClick={sixMonthsRangeDonut}
+                    >
+                      6M
+                    </button>
+                    <button
+                      type="button"
+                      className="dashboard-one-year-button1 button"
+                      onClick={oneYearRangeDonut}
+                    >
+                      1Y
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

@@ -1,14 +1,28 @@
 import * as d3 from 'd3'
 
-export const renderDonutChart = (data, containerSelector) => {
+export const renderDonutChart = (data, range, containerSelector) => {
+    let titleText;
+    if (range === 7) {
+        titleText = 'Spending by Category (1 Week)'
+    } else if (range === 30) {
+        titleText = 'Spending by Category (1 Month)'
+    } else if (range === 90) {
+        titleText = 'Spending by Category (3 Months)'
+    } else if (range === 180) {
+        titleText = 'Spending by Category (6 Months)'
+    } else if (range === 365) {
+        titleText = 'Spending by Category (1 Year)'
+    }
     // Set up the dimensions and radius
-    const width = 300;
-    const height = 300;
+    const width = 635;
+    const height = 261;
     const radius = Math.min(width, height) / 2;
-
+    const margin = { top: 10, right: 30, bottom: 30, left: 45 };
+    const innerWidth = width - margin.left - margin.right;
+    const innerHeight = height - margin.top - margin.bottom;
     // Define color scale
     const color = d3.scaleOrdinal()
-        .range(["#4974A5", "#5C8BC6", "#709FD7", "#83B2E8", "#96C7F9", "#A9DBFA", "#ff8c00"]);
+        .range(["#4974A5", "#5C8BC6", "#709FD7", "#83B2E8", "#96C7F9", "#A9DBFA", "#6BA1D6"  ]);
 
     // Define the arc generator
     const arc = d3.arc()
@@ -26,8 +40,19 @@ export const renderDonutChart = (data, containerSelector) => {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", `translate(${width / 2},${height / 2})`);
+        .attr("transform", `translate(${width / 2},${height / 2 + 10})`);
 
+    // Append title
+    svg.append("text")
+    .attr("x", 0)
+    .attr("y", -height / 2 + margin.top - 5 )
+    .attr("text-anchor", "middle")
+    .style("font-size", "1.2em")
+    .style('font-family', 'Helvetica')
+    .text(titleText);
+
+
+    
     // Append arcs
     const g = svg.selectAll(".arc")
         .data(pie(data))
