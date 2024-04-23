@@ -76,13 +76,26 @@ export const renderDonutChart = (data, containerSelector) => {
 };
 
 export const renderLineChart = (data, range, containerSelector) => {
+    let titleText;
+    if (range === 7) {
+        titleText = 'Net Income (1 Week)'
+    } else if (range === 30) {
+        titleText = 'Net Income (1 Month)'
+    } else if (range === 90) {
+        titleText = 'Net Income (3 Months)'
+    } else if (range === 180) {
+        titleText = 'Net Income (6 Months)'
+    } else if (range === 365) {
+        titleText = 'Net Income (1 Year)'
+    }
+
     // Remove any existing SVG elements
     d3.select(containerSelector).selectAll('*').remove();
 
     // Set up the dimensions
     const width = 635;
     const height = 261;
-    const margin = { top: 20, right: 20, bottom: 30, left: 50 };
+    const margin = { top: 10, right: 25, bottom: 30, left: 45 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 
@@ -109,7 +122,7 @@ export const renderLineChart = (data, range, containerSelector) => {
 
     // Set domains
     x.domain(d3.extent(data, d => d.date));
-    y.domain([0, d3.max(data, d => d.value)]);
+    y.domain(d3.extent(data, d => d.value)); 
 
     // Create SVG element
     const svg = d3.select(containerSelector)
@@ -119,6 +132,21 @@ export const renderLineChart = (data, range, containerSelector) => {
         .append("g")
         .attr("transform", `translate(${margin.left},${margin.top})`);
 
+    // Add white background rectangle
+    svg.append("rect")
+        .attr("width", innerWidth)
+        .attr("height", innerHeight)
+        .style("fill", "white");
+
+    // Append title
+    svg.append('text')
+    .attr('x', width/3 + 50)
+    .attr('y', 20)
+    .attr('text-anchor', 'middle')
+    .style('font-family', 'Helvetica')
+    .style('font-size', 20)
+    .text(titleText);
+    
     // Append path
     svg.append("path")
         .datum(data)
@@ -179,10 +207,12 @@ export const renderLineChart = (data, range, containerSelector) => {
 
     svg.append("g")
         .attr("transform", `translate(0, ${innerHeight})`)
+        .style('font-size', 13)
         .call(xAxis);
 
     // Append y-axis
     svg.append("g")
+        .style('font-size', 13)
         .call(d3.axisLeft(y));
 
     // Append tooltip

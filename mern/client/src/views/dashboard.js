@@ -214,7 +214,7 @@ const Dashboard = (props) => {
       renderDonutChart(data, '.dashboard-right-top');
       console.log(chartData)
       console.log(yearlyData)
-      //renderLineChart(chartData, '.dashboard-line-graph-container');
+      oneWeekRange();
       //window.chartRendered = true;
    // }
   }, []);
