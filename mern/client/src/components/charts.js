@@ -127,7 +127,7 @@ export const renderLineChart = (data, range, containerSelector) => {
     // Set up the dimensions
     const width = 635;
     const height = 261;
-    const margin = { top: 10, right: 30, bottom: 30, left: 45 };
+    const margin = { top: 10, right: 30, bottom: 30, left: 57 };
     const innerWidth = width - margin.left - margin.right;
     const innerHeight = height - margin.top - margin.bottom;
 

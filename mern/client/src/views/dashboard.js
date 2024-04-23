@@ -48,17 +48,33 @@ const fetchData = async (start, end) => {
         const transactionDate = transaction.date.split('T')[0];
         return transactionDate === currentDateStr;
       });
-
+      /*
       // Calculate daily net income
       for (const transaction of transactionsForDay) {
+        console.log(transaction.amount)
         dailyIncome += transaction.amount;
       }
 
       // Update range income
       rangeIncome += dailyIncome;
-
+      console.log("rangeIncome: ", rangeIncome)
       // Store the result in the format { date: 'YYYY-MM-DD', value: net_income }
-      dailyTransactions.push({ date: currentDateStr, value: -(rangeIncome) });
+      dailyTransactions.push({ date: currentDateStr, value: rangeIncome });*/
+      for (const transaction of transactionsForDay) {
+        if (transaction.amount >= 0) {
+          // Positive amount represents withdrawal
+          dailyIncome -= transaction.amount;
+        } else {
+          // Negative amount represents income
+          dailyIncome += Math.abs(transaction.amount);
+        }
+      }
+      
+      // Update range income
+      rangeIncome += dailyIncome;
+      
+      // Store the result in the format { date: 'YYYY-MM-DD', value: net_income }
+      dailyTransactions.push({ date: currentDateStr, value: rangeIncome });
     }
 
     console.log(dailyTransactions);
@@ -112,10 +128,10 @@ const fetchDataCategories = async (start, end) => {
   }
 };
 const init = async () => {
-  //use 1 month data by default
+  //use 1 week data by default
   endDate = new Date(); // Current date
   startDate = new Date();
-  startDate.setDate(endDate.getDate() - 30); // 30 days ago
+  startDate.setDate(endDate.getDate() - 7); // 7 days ago
   //allTransactions = await fetchData(startDate, endDate);
   allDonutTransactions = await fetchDataCategories(startDate, endDate);
   console.log(allDonutTransactions);

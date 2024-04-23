@@ -472,6 +472,7 @@ const saveCursorForItem = async function (transactionCursor, itemId) {
  * @param {string} amountRangeEnd
  */
 const aggregateTransactions = async function (userId, personalFinanceCategory, dateRangeStart, dateRangeEnd, pending, merchantName, amountRangeStart, amountRangeEnd, sum) {
+  console.log(dateRangeStart, dateRangeEnd);
   query = {
     user_id: userId,
   }
@@ -481,11 +482,9 @@ const aggregateTransactions = async function (userId, personalFinanceCategory, d
   }
   if (dateRangeStart != undefined && dateRangeEnd != undefined){
     query.date = {$gte: new Date(dateRangeStart), $lte: new Date(dateRangeEnd)};
-  }
-  if (dateRangeStart != undefined){
+  } else if (dateRangeStart != undefined){
     query.date = {$gte: new Date(dateRangeStart)};
-  }
-  if (dateRangeEnd != undefined){
+  } else if (dateRangeEnd != undefined){
     query.date = {$lte: new Date(dateRangeEnd)};
   }
   if (pending != undefined){
