@@ -288,49 +288,140 @@ export const renderLineChart = (data, range, containerSelector) => {
         });
 };
 
-export const renderBudgetPieChart = (spending, budget, containerSelector) => {
-    // Remove any existing svg elements
-    const d3 = window.d3; // Ensure d3 is available globally or import it
-    d3.select(containerSelector).selectAll("svg").remove();
+export const renderBudgetPieChart = (data, containerSelector) => {
+    const container = document.querySelector(containerSelector);
+    const containerExists = container !== null;
+    const title = "Spending Limit";
 
-    const width = 360, height = 360;
-    const radius = Math.min(width, height) / 2;
-    
+    if (!containerExists) {
+        console.error(`Container ${containerSelector} not found in the DOM.`);
+        return;
+    }
+
+    // Check if an SVG element already exists in the container
+    const existingSvg = container.querySelector('svg');
+    if (existingSvg) {
+        // Remove the existing SVG element
+        existingSvg.remove();
+    }
+
+    console.log(data);
+
+    // Specify the chart's dimensions.
+    const width = 635;
+    const height = 347;
+    const titleHeight = 30; // Height for the title
+
+    // Create the color scale.
     const color = d3.scaleOrdinal()
-        .range(spending > budget ? ["#ff6347", "#ccc"] : ["#4682b4", "#ccc"]); // Red if over budget, otherwise blue
+        .domain(data.map(d => d.name))
+        .range(["#107ab0", "#4db4e8"]);
 
-    const data = [
-        { name: "Spent", value: Math.min(spending, budget) },
-        { name: "Remaining", value: Math.max(0, budget - spending) }
-    ];
-
-    const svg = d3.select(containerSelector)
-        .append("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .append("g")
-        .attr("transform", `translate(${width / 2}, ${height / 2})`);
-
-    const arc = d3.arc()
-        .outerRadius(radius - 10)
-        .innerRadius(radius - 70);
-
+    // Create the pie layout and arc generator.
     const pie = d3.pie()
         .sort(null)
         .value(d => d.value);
 
-    const g = svg.selectAll(".arc")
-        .data(pie(data))
-        .enter().append("g")
-        .attr("class", "arc");
+    const arcs = pie(data.map(d => ({ ...d, percentage: d.value / data.reduce((sum, d) => sum + d.value, 0) * 100 })));
 
-    g.append("path")
-        .attr("d", arc)
-        .style("fill", d => color(d.data.name));
+    const arc = d3.arc()
+        .innerRadius(0)
+        .outerRadius(Math.min(width, height) / 2 - 1);
 
-    g.append("text")
-        .attr("transform", d => `translate(${arc.centroid(d)})`)
-        .attr("dy", ".35em")
+    // Create the SVG container.
+    const svg = d3.select(containerSelector)
+        .append("svg")
+        .attr("width", width)
+        .attr("height", height + titleHeight) // Increase the height to accommodate the title
+        .attr("viewBox", [-width / 2, -height / 2 - titleHeight / 2, width, height]) // Adjust the viewBox
+        .attr("style", "max-width: 100%; height: auto; font: 10px sans-serif;");
+
+    // Add the title
+    svg.append("text")
+        .attr("x", 0)
+        .attr("y", -height / 2 - 25 + titleHeight / 4) // Position the title above the chart
         .attr("text-anchor", "middle")
-        .text(d => `${d.data.name}: ${d.data.value}`);
-};
+        .style("font-size", "18px")
+        .style("font-weight", "bold")
+        .text(title);
+        
+    // Add a sector path for each value.
+    svg.selectAll()
+      .data(arcs)
+      .enter()
+      .append("path")
+      .attr("fill", d => color(d.data.name))
+      .attr("d", arc)
+      .append("title")
+      .text(d => `${d.data.name}: ${d.data.value.toLocaleString("en-US")}`);
+  
+    // Add percentage text
+    svg.selectAll()
+      .data(arcs)
+      .enter()
+      .append("text")
+      .attr("transform", d => `translate(${arc.centroid(d)})`)
+      .attr("dy", ".35em")
+      .attr("text-anchor", "middle")
+      .style("fill", "white")
+      .style("font-size", 18)
+      .text(d => `${d.data.percentage.toFixed(1)}%`);
+
+    // Create a group for the label line and text
+    const labelGroup = svg.append("g")
+    .attr("class", "label-group")
+    .style("display", "none");
+
+    svg.selectAll("path")
+    .on("mouseover", function(event, d) {
+        // Make all slices semi-transparent
+        svg.selectAll("path")
+        .transition()
+        .duration(200)
+        .style("opacity", 0.3);
+
+        // Make the hovered slice opaque and change its color
+        d3.select(this)
+        .transition()
+        .duration(200)
+        .style("opacity", 1);
+
+        // Show the label group
+        labelGroup.style("display", null);
+
+        // Add a line connecting the center of the pie to the hovered arc
+        const [x, y] = arc.centroid(d);
+        labelGroup
+        .append("line")
+        .attr("x1", 0)
+        .attr("y1", 0)
+        .attr("x2", x - 20)
+        .attr("y2", y - 50)
+        .attr("stroke", "black")
+        .attr("stroke-width", 1);
+
+        // Add the category name text
+        labelGroup
+        .append("text")
+        .attr("x", x - 20)
+        .attr("y", y - 50)
+        .attr("dy", "0.35em")
+        .style("font-size", 15)
+        .attr("text-anchor", x > 0 ? "start" : "end")
+        .attr("fill", "black")
+        .text(d.data.name + "" + d.data.value.toFixed(2));
+    })
+    .on("mouseout", function(event, d) {
+        // Make all slices opaque again
+        svg.selectAll("path")
+        .transition()
+        .duration(200)
+        .style("opacity", 1)
+        .attr("fill", function(d) { return color(d.data.name); }); // Reset the color
+
+        // Hide the label group and remove its contents
+        labelGroup.style("display", "none");
+        labelGroup.selectAll("*").remove();
+    });
+    return svg.node();
+  }

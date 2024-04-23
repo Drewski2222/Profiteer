@@ -8,6 +8,17 @@ import axios from 'axios'
 
 let allTransactions = [];
 let allDonutTransactions = [];
+let budgetData = [];
+let defaultVals = [
+  {
+    name: "Spent in last 30 days: $",
+    value: 100
+  },
+  {
+    name: "Limit reached in: $",
+    value: 100
+  }
+];
 let endDate;
 let startDate;
 
@@ -48,18 +59,7 @@ const fetchData = async (start, end) => {
         const transactionDate = transaction.date.split('T')[0];
         return transactionDate === currentDateStr;
       });
-      /*
-      // Calculate daily net income
-      for (const transaction of transactionsForDay) {
-        console.log(transaction.amount)
-        dailyIncome += transaction.amount;
-      }
 
-      // Update range income
-      rangeIncome += dailyIncome;
-      console.log("rangeIncome: ", rangeIncome)
-      // Store the result in the format { date: 'YYYY-MM-DD', value: net_income }
-      dailyTransactions.push({ date: currentDateStr, value: rangeIncome });*/
       for (const transaction of transactionsForDay) {
         if (transaction.amount >= 0) {
           // Positive amount represents withdrawal
@@ -127,6 +127,59 @@ const fetchDataCategories = async (start, end) => {
     console.error('Error fetching data:', error);
   }
 };
+
+// pie chart data retrieval
+const fetchSpendingData = async (userLimit) => {
+  let totalSpending = 0;
+
+  try {
+    // Calculate start and end dates
+    const endDate = new Date();
+    const startDate = new Date(endDate);
+    startDate.setDate(startDate.getDate() - 30);
+
+    // Fetch transactions data
+    const transactionsResponse = await axios.get('http://localhost:5000/server/users/agg_data', {
+      params: {
+        dateRangeStart: startDate.toISOString().split('T')[0],
+        dateRangeEnd: endDate.toISOString().split('T')[0],
+        sum: false
+      }
+    });
+    const transactionsData = transactionsResponse.data;
+
+    // Calculate total spending over the last 30 days
+    for (const transaction of transactionsData) {
+      if (transaction.amount >= 0) {
+        // Positive amount represents withdrawal
+        totalSpending += transaction.amount;
+      }
+    }
+
+    // Calculate amount remaining until spending limit
+    const remainingAmount = userLimit - totalSpending;
+
+    // Create array with spending data
+    defaultVals = [];
+    defaultVals.push({ name: "Spent in last 30 days: $", value: totalSpending });
+    defaultVals.push({ name: "Limit reached in: $", value: remainingAmount});
+    /*const spendingData = [
+      {
+        name: "Spent in last 30 days: $",
+        value: totalSpending
+      },
+      {
+        name: "Limit reached in: $",
+        value: remainingAmount
+      }
+    ];*/
+    return defaultVals;
+  } catch (error) {
+    console.error('Error fetching spending data:', error);
+    return null;
+  }
+};
+
 const init = async () => {
   //use 1 week data by default
   endDate = new Date(); // Current date
@@ -140,6 +193,7 @@ const init = async () => {
 
 const Dashboard = (props) => {
   init();
+  const [spendingLimitInput, setSpendingLimitInput] = useState('');
   const [showNotifications, setShowNotifications] = useState(false);
   const [notifications, setNotifications] = useState([
     { id: 1, text: 'Welcome to Profiteer!' },
@@ -155,13 +209,25 @@ const Dashboard = (props) => {
     setNotifications(notifications.filter((notification) => notification.id !== id));
     setNotificationCount(notificationCount - 1);
   };
+
+  const handleInputChange = (e) => {
+    setSpendingLimitInput(e.target.value);
+  };
+
+  const handleSubmit = async () => {
+    // load budget graph
+    console.log('Spending limit:', spendingLimitInput);
+    budgetData = await fetchSpendingData(spendingLimitInput)
+    console.log(budgetData)
+    renderBudgetPieChart(budgetData, '.dashboard-budget-graph-container')
+  };
+
   const [chartData, setChartData] = useState(allTransactions);
   // set range to 1 week
   const oneWeekRange = async () => {
     startDate = new Date(endDate.getTime() - (7*24*60*60*1000)); // 7 days ago
     const data = await fetchData(startDate, endDate);
     console.log(startDate)
-    setChartData(data); // Update state with fetched data
     renderLineChart(data, 7, '.dashboard-line-graph-container');
   };  
 
@@ -251,6 +317,7 @@ const Dashboard = (props) => {
   useEffect(() => {
     oneWeekRangeDonut();
     oneWeekRange();
+    renderBudgetPieChart(defaultVals, '.dashboard-budget-graph-container');
   },[]);
 
 
@@ -384,14 +451,20 @@ const Dashboard = (props) => {
               <div className="dashboard-budget-graph-container"></div>
               <div className="dashboard-container3">
                 <span className="dashboard-text8">
-                  Enter desired spending limit for 1 month: 
+                  Enter desired spending limit for 1 month: 
                 </span>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Spending Limit"
                   className="dashboard-budget-input input"
+                  value={spendingLimitInput}
+                  onChange={handleInputChange}
                 />
-                <button type="button" className="dashboard-button button">
+                <button
+                  type="button"
+                  className="dashboard-button button"
+                  onClick={handleSubmit}
+                >
                   Submit
                 </button>
               </div>
