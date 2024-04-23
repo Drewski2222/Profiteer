@@ -229,7 +229,8 @@
 }
 .dashboard-line-graph-container {
   width: 100%;
-  border: 2px dashed rgba(120, 120, 120, 0.4);
+  background-color: white;
+  border: 4px solid rgba(0, 0, 0, 1);
   height: 261px;
   display: flex;
   align-items: flex-start;
@@ -268,7 +269,8 @@
 }
 .dashboard-donut-graph-container {
   width: 100%;
-  border: 2px dashed rgba(120, 120, 120, 0.4);
+  background-color: white;
+  border: 4px solid rgba(0, 0, 0, 1);
   height: 261px;
   display: flex;
   align-items: flex-start;

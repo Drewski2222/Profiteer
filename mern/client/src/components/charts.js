@@ -15,7 +15,7 @@ export const renderDonutChart = (data, range, containerSelector) => {
     }
     // Set up the dimensions and radius
     const width = 635;
-    const height = 261;
+    const height = 240;
     const radius = Math.min(width, height) / 2;
     const margin = { top: 10, right: 30, bottom: 30, left: 45 };
     const innerWidth = width - margin.left - margin.right;
@@ -40,7 +40,7 @@ export const renderDonutChart = (data, range, containerSelector) => {
         .attr("width", width)
         .attr("height", height)
         .append("g")
-        .attr("transform", `translate(${width / 2},${height / 2 + 10})`);
+        .attr("transform", `translate(${width / 2 },${height / 2 + 10})`);
 
     // Append title
     svg.append("text")
