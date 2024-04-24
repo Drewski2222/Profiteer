@@ -221,6 +221,7 @@
 .dashboard-button {
   margin-top: var(--dl-space-space-oneandhalfunits);
   background-color: #364aa1;
+  color: white;
 }
 .dashboard-dashboard-right {
   top: 180px;
@@ -279,18 +280,23 @@
 }
 .dashboard-week-button {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-one-month-button {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-three-months-button {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-six-months-button {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-one-year-button {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-right-top {
   flex: 0 0 auto;
@@ -319,18 +325,23 @@
 }
 .dashboard-week-button1 {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-one-month-button1 {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-three-months-button1 {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-six-months-button1 {
   background-color: #37447E;
+  color: white;
 }
 .dashboard-one-year-button1 {
   background-color: #37447E;
+  color: white;
 }
 @media(max-width: 767px) {
   .dashboard-desktop-menu {
