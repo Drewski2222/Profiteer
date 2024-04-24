@@ -71,7 +71,7 @@ Users can sign up, connect their bank information, and access the dashboard. Det
 
 ### API Keys
 
-API keys for Plaid are required to run Profiteer locally. Instructions for obtaining and using these keys are provided in the repository's README.
+API keys for Plaid are required to run Profiteer locally.
 
 ## Assessments
 
