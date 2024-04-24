@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/Profiteer/static/css/main.f60e1485.css",
-    "main.js": "/Profiteer/static/js/main.1b4388de.js",
+    "main.js": "/Profiteer/static/js/main.810eed66.js",
     "index.html": "/Profiteer/index.html",
     "main.f60e1485.css.map": "/Profiteer/static/css/main.f60e1485.css.map",
-    "main.1b4388de.js.map": "/Profiteer/static/js/main.1b4388de.js.map"
+    "main.810eed66.js.map": "/Profiteer/static/js/main.810eed66.js.map"
   },
   "entrypoints": [
     "static/css/main.f60e1485.css",
-    "static/js/main.1b4388de.js"
+    "static/js/main.810eed66.js"
   ]
 }
