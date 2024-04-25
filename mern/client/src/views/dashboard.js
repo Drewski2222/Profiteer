@@ -331,7 +331,7 @@ const Dashboard = (props) => {
         <div className="dashboard-background">
           <div className="dashboard-background1">
             <header data-thq="thq-navbar" className="dashboard-navbar">
-              <Link to="/" className="dashboard-navlink">
+              <Link to="/Profiteer" className="dashboard-navlink">
                 <h2 className="dashboard-text">Profiteer</h2>
               </Link>
               <div
