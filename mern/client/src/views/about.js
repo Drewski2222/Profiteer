@@ -55,7 +55,7 @@ const About = (props) => {
             ></TestimonialCard1>
           </div>
           <header data-thq="thq-navbar" className="about-navbar">
-            <Link to="/" className="about-navlink">
+            <Link to="/Profiteer" className="about-navlink">
               <h2 className="about-text04">Profiteer</h2>
             </Link>
             <div
