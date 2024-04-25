@@ -1,5 +1,5 @@
 {
-  "homepage": "http://drewski2222.github.io/",
+  "homepage": "http://drewski2222.github.io/Profiteer/",
   "name": "profiteer",
   "version": "1.0.0",
   "private": true,
@@ -20,12 +20,12 @@
     "tsparticles": "^2.12.0"
   },
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
     "start": "craco start",
     "build": "craco build",
     "test": "craco test --env=jsdom",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
   "engines": {
     "node": "18.x"
