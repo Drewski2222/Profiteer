@@ -17,7 +17,7 @@ const Home = (props) => {
       <div className="home-hero">
       <ParticlesComponent />
         <header data-thq="thq-navbar" className="home-navbar">
-          <Link to="/" className="home-navlink">
+          <Link to="/Profiteer" className="home-navlink">
             <h2 className="home-text">Profiteer</h2>
           </Link>
         

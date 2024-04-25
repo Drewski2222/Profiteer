@@ -132,7 +132,7 @@ const Register = (props) => {
               <span className="register-text10">© Profiteer 2024</span>
             </div>
             <header data-thq="thq-navbar" className="register-navbar">
-              <Link to="/" className="register-navlink">
+              <Link to="/Profiteer" className="register-navlink">
                 <h2 className="register-text11">Profiteer</h2>
               </Link>
               <div

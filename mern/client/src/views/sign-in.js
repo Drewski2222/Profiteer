@@ -51,7 +51,7 @@ const SignIn = (props) => {
         <div className="sign-in-background">
           <div className="sign-in-image1">
             <header data-thq="thq-navbar" className="sign-in-navbar">
-              <Link to="/" className="sign-in-navlink">
+              <Link to="/Profiteer" className="sign-in-navlink">
                 <h2 className="sign-in-text">Profiteer</h2>
               </Link>
               <div
