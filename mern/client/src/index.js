@@ -22,11 +22,11 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route component={Register} exact path="/register" />
-        <Route component={Confirmation} exact path="/confirmation" />
-        <Route component={SignIn} exact path="/sign-in" />
-        <Route component={About} exact path="/about" />
-        <Route component={Dashboard} exact path="/dashboard" />
+        <Route component={Register} exact path="/Profiteer/register" />
+        <Route component={Confirmation} exact path="/Profiteer/confirmation" />
+        <Route component={SignIn} exact path="/Profiteer/sign-in" />
+        <Route component={About} exact path="/Profiteer/about" />
+        <Route component={Dashboard} exact path="/Profiteer/dashboard" />
         <Route component={Home} exact path="/Profiteer" />
         <Route component={NotFound} path="**" />
         <Redirect to="**" />

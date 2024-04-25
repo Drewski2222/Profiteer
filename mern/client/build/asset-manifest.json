@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/Profiteer/static/css/main.f60e1485.css",
-    "main.js": "/Profiteer/static/js/main.6c057942.js",
+    "main.css": "/Profiteer/static/css/main.830ad9c5.css",
+    "main.js": "/Profiteer/static/js/main.dbaed09d.js",
     "index.html": "/Profiteer/index.html",
-    "main.f60e1485.css.map": "/Profiteer/static/css/main.f60e1485.css.map",
-    "main.6c057942.js.map": "/Profiteer/static/js/main.6c057942.js.map"
+    "main.830ad9c5.css.map": "/Profiteer/static/css/main.830ad9c5.css.map",
+    "main.dbaed09d.js.map": "/Profiteer/static/js/main.dbaed09d.js.map"
   },
   "entrypoints": [
-    "static/css/main.f60e1485.css",
-    "static/js/main.6c057942.js"
+    "static/css/main.830ad9c5.css",
+    "static/js/main.dbaed09d.js"
   ]
 }
