@@ -36,21 +36,21 @@ const About = (props) => {
               name="Jacob Hoppenstedt"
               role="Frontend Developer"
               quote="Hey, I'm Jacob Hoppenstedt, a sophomore computer science major at the University of Florida and one of the frontend developers for Profiteer! I am currently interested in AI/Machine Learning and learning more about how to apply them to my projects. Outside of school, I like making music, working out, and hanging with friends. I hope you join us on this exciting journey to make your financial goals a reality!"
-              pictureSrc="/1709997612740-200h.jpg"
+              pictureSrc="https://i.imgur.com/1gJcfZ9.jpg"
               rootClassName="rootClassName"
             ></TestimonialCard1>
             <TestimonialCard1
               name="Trevor Gross"
               role="Backend Developer"
               quote="Howdy! My name is Trevor Gross and I am a second year computer science major at the University of Florida. With Profiteer, I am in charge of the database, but also spend a considerable amount of time in the backend, too. I have been pursuing AI/ML for the past few semesters, and plan on working as a ML Engineer in my career. Other than CS, I am studying German, am very passionate about traveling, and am always listening to music. We are excited you have chosen to use Profiteer on your quest to great savings!"
-              pictureSrc="/trevor_gross_headshot-200h.jpg"
+              pictureSrc="https://i.imgur.com/PVgjcDi.jpg"
               rootClassName="rootClassName3"
             ></TestimonialCard1>
             <TestimonialCard1
               name="Nathaniel Babione"
               role="Backend Developer"
               quote="Hello, I'm Nathaniel Babione. I am a Junior Computer Engineering student at the University of Florida. I am a developer for Profiteer and mainly work on developing the backend. I would like to specialize in computer graphics or some kind of artificial intelligence as I have found these topics to be very interesting. I also like speed solving Rubik's Cubes, playing guitar, and doing stuff with friends. Thanks for choosing Profiteer and I hope you can achieve your financial freedom!"
-              pictureSrc="/nathan_headshot.jpg"
+              pictureSrc="https://i.imgur.com/OwBJcr2.jpg"
               rootClassName="rootClassName1"
             ></TestimonialCard1>
           </div>

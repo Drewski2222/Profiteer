@@ -53,7 +53,7 @@ const Home = (props) => {
               </div>
               <motion.img
                 alt="image"
-                src="/profiteertext-200h.png"
+                src="https://i.imgur.com/VFpiq3k.png"
                 className="home-image1"
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
@@ -92,7 +92,7 @@ const Home = (props) => {
           whileHover={{scale: 0.75}} 
           transition = {{duration: 0.5, ease: [0.6, 0.05, -0.01, 0.9]}}
             alt="image"
-            src="/profiteerguy.png"
+            src="https://i.imgur.com/ikH8tOk.png"
             className="home-image2"
           />
         </div>
@@ -130,7 +130,7 @@ const Home = (props) => {
           whileInView={{opacity: 1, scale: 1}} 
           transition = {{duration: 0.6}} 
             alt="image"
-            src="/_eac2bdf1-0d77-466f-a545-97bc42988d6d-1500h.jpg"
+            src="https://i.imgur.com/sl5Jo3G.jpg"
             className="home-image3 image-notes"
           />
       </div>
@@ -165,7 +165,7 @@ const Home = (props) => {
           whileInView={{opacity: 1, scale: 1}} 
           transition = {{duration: 0.6}} 
             alt="image"
-            src="/_946eeef7-2461-4292-b5af-c32610e69038-1500w.jpg"
+            src="https://i.imgur.com/pmv7Z68.jpg"
             className="home-image4 image-notes"
           />
       </div>
@@ -175,7 +175,7 @@ const Home = (props) => {
           whileInView={{opacity: 1, scale: 1}} 
           transition = {{duration: 0.6}} 
             alt="image"
-            src="/_71708491-a3b1-48e4-83ae-4b779164ca6b-700h.jpg"
+            src="https://i.imgur.com/OthHsMF.jpg"
             className="home-image5 image-notes"
           />
           <div
